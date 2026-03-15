@@ -37,6 +37,7 @@ export function FeaturedWork() {
                             width={28}
                             height={28}
                             className="rounded-md shrink-0"
+                            unoptimized={project.image.endsWith(".svg")}
                           />
                         )}
                         <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">

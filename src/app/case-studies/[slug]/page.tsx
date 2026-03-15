@@ -7,6 +7,7 @@ import { SectionContainer } from "@/components/shared/section-container";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import { caseStudies } from "@/data/case-studies";
 import { projects } from "@/data/projects";
+import { ArchitectureDiagram } from "@/components/diagrams/architecture-diagram";
 
 export function generateStaticParams() {
   return caseStudies.map((cs) => ({ slug: cs.slug }));
@@ -89,6 +90,9 @@ export default async function CaseStudyDetailPage({
             <p className="text-muted-foreground leading-relaxed">
               {study.architecture}
             </p>
+            {study.relatedProject && (
+              <ArchitectureDiagram slug={study.relatedProject} className="mt-6" />
+            )}
           </div>
         </ScrollReveal>
 

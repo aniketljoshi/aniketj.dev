@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import { TechIcon } from "@/components/shared/tech-icon";
+import { ArchitectureDiagram, hasDiagram } from "@/components/diagrams/architecture-diagram";
 import type { Project, CaseStudy, Domain } from "@/types";
 
 interface WorkGridProps {
@@ -82,6 +83,7 @@ export function WorkGrid({ projects, caseStudies }: WorkGridProps) {
                             width={28}
                             height={28}
                             className="rounded-md shrink-0"
+                            unoptimized={project.image.endsWith(".svg")}
                           />
                         )}
                         <h2 className="text-lg font-semibold">
@@ -168,6 +170,9 @@ export function WorkGrid({ projects, caseStudies }: WorkGridProps) {
                         <p className="text-sm text-muted-foreground leading-relaxed">
                           {cs ? cs.architecture : project.architectureNotes}
                         </p>
+                        {hasDiagram(project.slug) && (
+                          <ArchitectureDiagram slug={project.slug} className="mt-4" />
+                        )}
                       </div>
                     )}
 

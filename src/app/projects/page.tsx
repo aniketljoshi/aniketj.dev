@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/shared/page-header";
 import { SectionContainer } from "@/components/shared/section-container";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
+import { TechIcon } from "@/components/shared/tech-icon";
 import { projects } from "@/data/projects";
 
 export const metadata: Metadata = {
@@ -29,6 +31,15 @@ export default function ProjectsPage() {
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-1">
+                        {project.image && (
+                          <Image
+                            src={project.image}
+                            alt={project.title}
+                            width={28}
+                            height={28}
+                            className="rounded-md shrink-0"
+                          />
+                        )}
                         <h2 className="text-lg font-semibold group-hover:text-primary transition-colors">
                           {project.title}
                         </h2>
@@ -46,8 +57,9 @@ export default function ProjectsPage() {
                         {project.stack.slice(0, 8).map((tech) => (
                           <span
                             key={tech}
-                            className="text-xs px-2 py-0.5 rounded-md bg-muted text-muted-foreground"
+                            className="inline-flex items-center gap-1.5 text-xs px-2 py-0.5 rounded-md bg-muted text-muted-foreground"
                           >
+                            <TechIcon name={tech} />
                             {tech}
                           </span>
                         ))}

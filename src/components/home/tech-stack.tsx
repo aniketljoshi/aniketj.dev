@@ -1,6 +1,7 @@
 import { SectionContainer } from "@/components/shared/section-container";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
+import { TechIcon } from "@/components/shared/tech-icon";
 import { skills } from "@/data/skills";
 
 export function TechStack() {
@@ -21,8 +22,9 @@ export function TechStack() {
                 {category.skills.map((skill) => (
                   <span
                     key={skill}
-                    className="text-xs px-2 py-1 rounded-md border bg-card text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs px-2 py-1 rounded-md border bg-card text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors"
                   >
+                    <TechIcon name={skill} />
                     {skill}
                   </span>
                 ))}

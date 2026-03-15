@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
@@ -6,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SectionContainer } from "@/components/shared/section-container";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
+import { TechIcon } from "@/components/shared/tech-icon";
 import { projects } from "@/data/projects";
 
 export function generateStaticParams() {
@@ -47,6 +49,15 @@ export default async function ProjectDetailPage({
 
         <ScrollReveal>
           <div className="flex items-center gap-3 mb-2">
+            {project.image && (
+              <Image
+                src={project.image}
+                alt={project.title}
+                width={40}
+                height={40}
+                className="rounded-lg shrink-0"
+              />
+            )}
             <h1 className="text-4xl font-bold tracking-tight">
               {project.title}
             </h1>
@@ -120,8 +131,9 @@ export default async function ProjectDetailPage({
               {project.stack.map((tech) => (
                 <span
                   key={tech}
-                  className="text-sm px-3 py-1 rounded-md border bg-card text-muted-foreground"
+                  className="inline-flex items-center gap-1.5 text-sm px-3 py-1 rounded-md border bg-card text-muted-foreground"
                 >
+                  <TechIcon name={tech} />
                   {tech}
                 </span>
               ))}

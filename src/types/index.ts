@@ -50,6 +50,7 @@ export interface Certification {
   issuer: string;
   year?: number;
   credentialUrl?: string;
+  badgeImage?: string;
 }
 
 export interface SkillCategory {

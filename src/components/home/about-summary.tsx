@@ -9,7 +9,7 @@ const terminalLines = [
   { label: "name", value: "Aniket Joshi" },
   { label: "role", value: "Software Architect" },
   { label: "location", value: "Pune, India" },
-  { label: "experience", value: "11+ years" },
+  { label: "experience", value: "12+ years" },
   { label: "certifications", value: "6x Azure + Databricks + K8s" },
   { label: "focus", value: "Architecture, Cloud, AI, Web3" },
 ];

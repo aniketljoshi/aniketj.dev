@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import { ExternalLink } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { SectionContainer } from "@/components/shared/section-container";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -10,7 +12,7 @@ import { certifications } from "@/data/certifications";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Software Architect with 11+ years building distributed systems across healthcare, logistics, banking, and blockchain.",
+    "Software Architect with 12+ years building distributed systems across healthcare, logistics, banking, and blockchain.",
 };
 
 const principles = [
@@ -82,7 +84,18 @@ export default function AboutPage() {
                     </Badge>
                   )}
                 </div>
-                <p className="text-sm text-primary">{exp.company}</p>
+                <div className="flex items-center gap-2">
+                  {exp.companyLogo && (
+                    <Image
+                      src={exp.companyLogo}
+                      alt={exp.company}
+                      width={20}
+                      height={20}
+                      className="rounded shrink-0"
+                    />
+                  )}
+                  <p className="text-sm text-primary">{exp.company}</p>
+                </div>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   {exp.period} &middot; {exp.location}
                 </p>
@@ -123,17 +136,51 @@ export default function AboutPage() {
       <SectionContainer className="py-12">
         <SectionHeading title="Certifications" />
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {certifications.map((cert, i) => (
-            <ScrollReveal key={cert.code} delay={i * 0.03}>
-              <div className="rounded-lg border bg-card p-4">
-                <p className="font-mono text-xs text-primary">{cert.code}</p>
-                <p className="text-sm font-medium mt-1">{cert.name}</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {cert.issuer}
-                </p>
+          {certifications.map((cert, i) => {
+            const content = (
+              <div className="rounded-lg border bg-card p-4 h-full transition-colors hover:border-primary/30 group">
+                <div className="flex items-center gap-3">
+                  {cert.badgeImage && (
+                    <Image
+                      src={cert.badgeImage}
+                      alt={cert.name}
+                      width={48}
+                      height={48}
+                      className="shrink-0"
+                    />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <p className="font-mono text-xs text-primary">{cert.code}</p>
+                      {cert.credentialUrl && (
+                        <ExternalLink className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                      )}
+                    </div>
+                    <p className="text-sm font-medium mt-1">{cert.name}</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {cert.issuer}
+                    </p>
+                  </div>
+                </div>
               </div>
-            </ScrollReveal>
-          ))}
+            );
+            return (
+              <ScrollReveal key={cert.code} delay={i * 0.03}>
+                {cert.credentialUrl ? (
+                  <a
+                    href={cert.credentialUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block h-full"
+                  >
+                    {content}
+                  </a>
+                ) : (
+                  content
+                )}
+              </ScrollReveal>
+            );
+          })}
         </div>
       </SectionContainer>
 

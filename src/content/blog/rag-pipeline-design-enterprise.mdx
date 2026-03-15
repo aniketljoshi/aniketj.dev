@@ -1,0 +1,136 @@
+---
+title: "Building an Enterprise RAG Pipeline on Azure Databricks"
+description: "How I designed a retrieval-augmented generation pipeline at Vanderlande — Unity Catalog governance, vectorization strategies, chunking trade-offs, and why we chose Azure AI Search over Pinecone."
+date: "2026-01-28"
+tags: ["architecture", "ai", "rag", "azure", "enterprise"]
+published: true
+---
+
+# Building an Enterprise RAG Pipeline on Azure Databricks
+
+At Vanderlande, the warehouse automation documentation corpus exceeded 2.3 million pages — equipment manuals, safety procedures, maintenance schedules, engineering specifications, regulatory compliance documents. Engineers spent an average of 47 minutes per query finding the right information. We built a RAG pipeline that reduced this to under 30 seconds with 94% answer accuracy.
+
+## Why RAG over Fine-Tuning
+
+Fine-tuning a model on Vanderlande's corpus would have required:
+- Re-training every time documentation changed (weekly)
+- Handling data governance for proprietary engineering schematics
+- Managing model versioning across different business units
+
+RAG separates **knowledge** (vectorized documents) from **reasoning** (the LLM). New documents are indexed within minutes. The LLM never sees raw proprietary data during training. Access control is enforced at the retrieval layer, not the model layer.
+
+## Architecture
+
+```
+Document Sources → Ingestion Pipeline → Vector Store → Retrieval → Generation
+                                                                      │
+SharePoint ────┐                                                      │
+Confluence ────┼── Delta Live Tables ── Chunking ── Embedding ── Azure AI Search
+SAP DMS ───────┤       (Bronze → Silver → Gold)                      │
+Engineering DB ┘                                                      │
+                                                         Azure OpenAI (GPT-4o)
+                                                              │
+                                                         Response + Citations
+```
+
+### Data Ingestion: Delta Live Tables
+
+The ingestion pipeline runs on Databricks with Delta Live Tables (DLT) for exactly-once processing guarantees:
+
+**Bronze Layer**: Raw documents ingested as binary blobs with metadata (source system, document ID, last modified timestamp, security classification).
+
+**Silver Layer**: Document parsing and normalization. PDFs run through Azure Document Intelligence for OCR + layout analysis. We preserve table structures, figure captions, and cross-references — critical context that naive text extraction destroys.
+
+**Gold Layer**: Chunked, embedded, and ready for indexing. This is where the interesting engineering happens.
+
+### Chunking Strategy: The Hard Problem
+
+Chunking is the most consequential decision in a RAG pipeline. Too small, and you lose context. Too large, and retrieval precision drops. We tested four strategies:
+
+| Strategy | Chunk Size | Overlap | Retrieval Accuracy | Latency |
+|---|---|---|---|---|
+| Fixed-size | 512 tokens | 50 tokens | 71% | 120ms |
+| Sentence-based | ~200 tokens | 1 sentence | 78% | 140ms |
+| Semantic (embedding similarity) | Variable | Adaptive | 84% | 180ms |
+| **Hybrid hierarchical** | **Parent: 2048 / Child: 256** | **None** | **94%** | **160ms** |
+
+**Hybrid hierarchical chunking** won decisively. Here's how it works:
+
+1. Split documents into **parent chunks** (~2048 tokens) at natural section boundaries (headings, page breaks)
+2. Split each parent into **child chunks** (~256 tokens) at sentence boundaries
+3. Embed and index **child chunks** for high-precision retrieval
+4. When a child chunk matches, retrieve the **parent chunk** for generation context
+
+This gives you the precision of small chunks during retrieval and the context of large chunks during generation.
+
+### Embedding Model Selection
+
+We evaluated three embedding models on our domain-specific benchmark:
+
+| Model | Dimensions | Domain Accuracy | Throughput | Cost |
+|---|---|---|---|---|
+| text-embedding-ada-002 | 1536 | 82% | 2,500 docs/min | $0.0001/1K tokens |
+| text-embedding-3-large | 3072 | 89% | 1,800 docs/min | $0.00013/1K tokens |
+| **text-embedding-3-large (1536-dim)** | **1536** | **88%** | **2,200 docs/min** | **$0.00013/1K tokens** |
+
+`text-embedding-3-large` with **Matryoshka dimension reduction** to 1536 dimensions gave us 88% accuracy (only 1% less than full 3072) at 22% higher throughput. The reduced dimensions also halved our vector storage costs.
+
+### Vector Store: Azure AI Search over Pinecone
+
+This was a governance-driven decision. Vanderlande operates under strict EU data residency requirements. Azure AI Search runs within the same Azure subscription, VNet, and region as our Databricks workspace. Data never leaves the compliance boundary.
+
+Beyond governance, Azure AI Search offers **hybrid search** — combining vector similarity with BM25 keyword matching. For technical documentation, keyword search catches exact part numbers and specification codes that semantic search misses. Hybrid retrieval improved accuracy by 6% over vector-only search.
+
+### Unity Catalog: Row-Level Security for RAG
+
+The most complex requirement: **different engineers should only retrieve documents they're authorized to see**. A maintenance engineer shouldn't find classified R&D specifications. A contractor shouldn't see internal safety incident reports.
+
+We implemented this through Unity Catalog's row-level security:
+
+1. Each document chunk inherits the security classification of its source document
+2. User authentication flows through Azure AD → Databricks → Unity Catalog
+3. At query time, the retrieval function runs with the user's Unity Catalog permissions
+4. The vector search is post-filtered by the user's accessible document set
+
+This means the **same vector index** serves all users, but each user's results are filtered by their authorization level. No separate indexes per role, no data duplication.
+
+## Generation Layer
+
+### Prompt Engineering for Technical Accuracy
+
+The system prompt enforces strict citation requirements:
+
+```
+You are a technical documentation assistant for Vanderlande warehouse automation.
+
+Rules:
+1. Answer ONLY using the provided context documents
+2. Every factual claim must include a citation: [Doc: <source>, Section: <heading>]
+3. If the context doesn't contain enough information, say so explicitly
+4. Never extrapolate beyond the provided documents
+5. For numerical specifications, quote the exact value from the document
+```
+
+**Grounded generation** is critical for enterprise RAG. An engineer acting on a hallucinated torque specification for a conveyor belt motor could cause equipment failure. The citation requirement lets engineers verify every claim against the source document.
+
+### Evaluation Framework
+
+We built a continuous evaluation pipeline using a human-labeled benchmark of 500 question-answer pairs:
+
+| Metric | Definition | Target | Actual |
+|---|---|---|---|
+| **Answer accuracy** | Human-judged correctness | > 90% | 94% |
+| **Citation accuracy** | Cited sources contain the claimed fact | > 95% | 97% |
+| **Retrieval recall@5** | Relevant document in top 5 results | > 85% | 91% |
+| **Hallucination rate** | Claims not supported by retrieved context | < 5% | 2.1% |
+| **Latency (P95)** | End-to-end response time | < 10s | 6.2s |
+
+This evaluation runs nightly against the latest index. Any regression triggers an alert and blocks index promotion to production.
+
+## What I Learned
+
+**Chunking matters more than the LLM.** We spent weeks testing GPT-4 vs GPT-4o vs Claude — accuracy varied by ~3%. Switching from fixed-size to hierarchical chunking improved accuracy by 23%.
+
+**Governance is a feature, not a constraint.** Unity Catalog's row-level security wasn't just a compliance checkbox — it enabled us to serve a single platform to all 3,000+ engineers instead of building separate systems per security tier.
+
+**Evaluation is the product.** Without the 500-QA benchmark and nightly evaluation pipeline, we couldn't have iterated on chunking strategies with confidence. The evaluation pipeline took 3 weeks to build and saved us months of blind experimentation.

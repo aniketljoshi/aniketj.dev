@@ -34,7 +34,9 @@ export const projects: Project[] = [
     architectureNotes:
       "Trust boundary model with zero PII crossing verification boundary. Dual Sparse Merkle Tree for revocation, QLDB for audit trail, DynamoDB for state. Path-triggered CI/CD with per-service deployments.",
     image: "/projects/satyastack.png",
+    liveUrl: "https://www.satyastack.com",
     featured: true,
+    relatedBlog: "zk-proof-architecture-satyastack",
   },
   {
     slug: "artistskonnect",
@@ -68,6 +70,7 @@ export const projects: Project[] = [
     architectureNotes:
       "Clean architecture with DDD. Backend exposes REST API + SignalR hubs. Supabase handles auth, R2 handles media storage with presigned URLs. Docker Compose for local dev with MinIO and InBucket emulators.",
     image: "/projects/artistskonnect.png",
+    liveUrl: "https://www.artistskonnect.com",
     featured: true,
   },
   {
@@ -136,7 +139,9 @@ export const projects: Project[] = [
     architectureNotes:
       "Event-driven architecture with background job orchestration. Multi-chain data ingestion through RPC providers, with webhook-based alerting and real-time monitoring pipelines.",
     image: "/projects/walletweaver-logo.svg",
+    liveUrl: "https://www.walletweaver.com",
     featured: false,
+    relatedBlog: "building-blockchain-intelligence-walletweaver",
   },
   {
     slug: "bitcoin-india-conference",
@@ -173,6 +178,7 @@ export const projects: Project[] = [
       "Hybrid architecture retaining Supabase for verified user persistence and analytics, with AWS handling the high-throughput OTP and registration flow. Queue-based processing with SQS for reliable delivery.",
     featured: false,
     relatedCaseStudy: "high-scale-registration",
+    relatedBlog: "scaling-200k-signups-per-minute",
   },
   {
     slug: "cryptowala-exchange",
@@ -208,6 +214,7 @@ export const projects: Project[] = [
       "Multi-service architecture with dedicated custody, compliance, and payment rail integrations. Audit-grade logging and tiered identity verification for regulatory compliance.",
     featured: false,
     relatedCaseStudy: "p2p-exchange-architecture",
+    relatedBlog: "p2p-exchange-compliance-architecture",
   },
   {
     slug: "ai-documentation-search",
@@ -239,6 +246,7 @@ export const projects: Project[] = [
     ],
     featured: false,
     relatedCaseStudy: "rag-documentation-search",
+    relatedBlog: "rag-pipeline-design-enterprise",
   },
   {
     slug: "keycloak-migration",
@@ -268,6 +276,7 @@ export const projects: Project[] = [
     ],
     featured: false,
     relatedCaseStudy: "keycloak-identity-migration",
+    relatedBlog: "keycloak-migration-zero-downtime",
   },
   {
     slug: "encryption-suite",

@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   title: "Projects",
   description:
     "Selected projects spanning Web3, cloud infrastructure, AI systems, and enterprise platforms.",
+  alternates: { canonical: "/projects" },
 };
 
 export default function ProjectsPage() {

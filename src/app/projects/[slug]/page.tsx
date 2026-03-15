@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, ExternalLink, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SectionContainer } from "@/components/shared/section-container";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import { TechIcon } from "@/components/shared/tech-icon";
 import { projects } from "@/data/projects";
+import { caseStudies } from "@/data/case-studies";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -25,6 +26,16 @@ export async function generateMetadata({
   return {
     title: project.title,
     description: project.tagline,
+    alternates: { canonical: `/projects/${slug}` },
+    openGraph: {
+      title: project.title,
+      description: project.tagline,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description: project.tagline,
+    },
   };
 }
 
@@ -175,6 +186,29 @@ export default async function ProjectDetailPage({
             </div>
           </ScrollReveal>
         )}
+
+        {/* Related Case Study */}
+        {project.relatedCaseStudy && (() => {
+          const cs = caseStudies.find((c) => c.slug === project.relatedCaseStudy);
+          if (!cs) return null;
+          return (
+            <ScrollReveal>
+              <div className="mt-8">
+                <h2 className="text-xl font-semibold mb-3">Related Case Study</h2>
+                <Link href={`/case-studies/${cs.slug}`}>
+                  <div className="group rounded-lg border bg-card p-5 transition-all hover:border-primary/30 hover:glow">
+                    <Badge variant="secondary" className="text-xs mb-2">{cs.domain}</Badge>
+                    <h3 className="font-medium group-hover:text-primary transition-colors">{cs.title}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">{cs.subtitle}</p>
+                    <span className="inline-flex items-center text-xs text-primary mt-3">
+                      Read case study <ArrowRight className="ml-1 h-3 w-3" />
+                    </span>
+                  </div>
+                </Link>
+              </div>
+            </ScrollReveal>
+          );
+        })()}
       </SectionContainer>
     </>
   );

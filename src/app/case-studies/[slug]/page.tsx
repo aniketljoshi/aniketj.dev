@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SectionContainer } from "@/components/shared/section-container";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import { caseStudies } from "@/data/case-studies";
+import { projects } from "@/data/projects";
 
 export function generateStaticParams() {
   return caseStudies.map((cs) => ({ slug: cs.slug }));
@@ -22,6 +23,16 @@ export async function generateMetadata({
   return {
     title: study.title,
     description: study.subtitle,
+    alternates: { canonical: `/case-studies/${slug}` },
+    openGraph: {
+      title: study.title,
+      description: study.subtitle,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: study.title,
+      description: study.subtitle,
+    },
   };
 }
 
@@ -113,6 +124,29 @@ export default async function CaseStudyDetailPage({
             </div>
           </div>
         </ScrollReveal>
+
+        {/* Related Project */}
+        {study.relatedProject && (() => {
+          const proj = projects.find((p) => p.slug === study.relatedProject);
+          if (!proj) return null;
+          return (
+            <ScrollReveal>
+              <div className="mt-8">
+                <h2 className="text-xl font-semibold mb-3">Related Project</h2>
+                <Link href={`/projects/${proj.slug}`}>
+                  <div className="group rounded-lg border bg-card p-5 transition-all hover:border-primary/30 hover:glow">
+                    <Badge variant="secondary" className="text-xs mb-2">{proj.domain}</Badge>
+                    <h3 className="font-medium group-hover:text-primary transition-colors">{proj.title}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">{proj.tagline}</p>
+                    <span className="inline-flex items-center text-xs text-primary mt-3">
+                      View project <ArrowRight className="ml-1 h-3 w-3" />
+                    </span>
+                  </div>
+                </Link>
+              </div>
+            </ScrollReveal>
+          );
+        })()}
       </SectionContainer>
     </>
   );

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/shared/page-header";
 import { SectionContainer } from "@/components/shared/section-container";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
   title: "About",
   description:
     "Software Architect with 12+ years building distributed systems across healthcare, logistics, banking, and blockchain.",
+  alternates: { canonical: "/about" },
 };
 
 const principles = [
@@ -45,6 +47,59 @@ export default function AboutPage() {
         title="About"
         description="Software Architect bridging enterprise systems, cloud infrastructure, AI, and Web3."
       />
+
+      {/* Profile */}
+      <SectionContainer className="py-12">
+        <div className="flex flex-col md:flex-row gap-8 items-start">
+          <ScrollReveal>
+            <Image
+              src="/images/aniket.jpg"
+              alt="Aniket Joshi"
+              width={200}
+              height={200}
+              className="rounded-xl border shrink-0"
+              priority
+            />
+          </ScrollReveal>
+          <ScrollReveal delay={0.1}>
+            <div className="space-y-4">
+              <p className="text-muted-foreground leading-relaxed">
+                I&apos;m a Software Architect with over a decade of experience
+                building production systems across healthcare, logistics, banking,
+                ecommerce, and blockchain. My work sits at the intersection of
+                backend architecture, cloud infrastructure, and product
+                engineering.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Currently at Vanderlande, I lead AI-driven features on enterprise
+                platforms using RAG pipelines, Databricks, and Azure services.
+                Outside of work, I build Web3 products — from zero-knowledge
+                compliance infrastructure to compliant crypto exchanges.
+              </p>
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  render={
+                    <a href="/resume/aniket-joshi-web2.pdf" download />
+                  }
+                >
+                  <Download className="mr-2 h-4 w-4" /> Resume (Web2)
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  render={
+                    <a href="/resume/aniket-joshi-web3.pdf" download />
+                  }
+                >
+                  <Download className="mr-2 h-4 w-4" /> Resume (Web3)
+                </Button>
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+      </SectionContainer>
 
       {/* Philosophy */}
       <SectionContainer className="py-12">

@@ -4,6 +4,7 @@ import { LazyMotionProvider } from "@/components/motion";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Analytics } from "@vercel/analytics/react";
 import { siteConfig } from "@/data/site";
 import "./globals.css";
 
@@ -34,6 +35,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  alternates: {
+    canonical: siteConfig.url,
+  },
 };
 
 export default function RootLayout({
@@ -44,13 +48,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <body className="min-h-screen bg-background font-sans antialiased">
+        <a href="#main-content" className="skip-to-content">
+          Skip to content
+        </a>
         <LazyMotionProvider>
           <TooltipProvider>
             <Header />
-            <main className="pt-16">{children}</main>
+            <main id="main-content" className="pt-16">{children}</main>
             <Footer />
           </TooltipProvider>
         </LazyMotionProvider>
+        <Analytics />
         <script
           type="application/ld+json"
           suppressHydrationWarning

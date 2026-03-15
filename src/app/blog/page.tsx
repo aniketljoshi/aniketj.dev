@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "Blog",
   description:
     "Thoughts on software architecture, distributed systems, AI, and Web3.",
+  alternates: { canonical: "/blog" },
 };
 
 export default async function BlogPage() {
@@ -39,7 +40,7 @@ export default async function BlogPage() {
                           {post.description}
                         </p>
                         <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
-                          <time>
+                          <time dateTime={post.date}>
                             {new Date(post.date).toLocaleDateString("en-US", {
                               year: "numeric",
                               month: "long",

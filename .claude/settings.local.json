@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:aniketljoshi.github.io)",
+      "WebFetch(domain:linktr.ee)",
+      "Bash(find /c/Users/inaj7/source/repos/web3/aniketj.dev -type f -name *.json -o -name *.js -o -name *.ts -o -name *.tsx)",
+      "WebSearch"
+    ]
+  }
+}

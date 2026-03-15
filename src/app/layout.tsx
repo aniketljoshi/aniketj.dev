@@ -3,6 +3,7 @@ import { inter, jetbrainsMono } from "@/lib/fonts";
 import { LazyMotionProvider } from "@/components/motion";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Analytics } from "@vercel/analytics/react";
 import { siteConfig } from "@/data/site";
@@ -51,13 +52,20 @@ export default function RootLayout({
         <a href="#main-content" className="skip-to-content">
           Skip to content
         </a>
-        <LazyMotionProvider>
-          <TooltipProvider>
-            <Header />
-            <main id="main-content" className="pt-16">{children}</main>
-            <Footer />
-          </TooltipProvider>
-        </LazyMotionProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <LazyMotionProvider>
+            <TooltipProvider>
+              <Header />
+              <main id="main-content" className="pt-16">{children}</main>
+              <Footer />
+            </TooltipProvider>
+          </LazyMotionProvider>
+        </ThemeProvider>
         <Analytics />
         <script
           type="application/ld+json"

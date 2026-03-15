@@ -65,12 +65,15 @@ export function ExpertiseGrid() {
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {expertise.map((item, i) => (
           <ScrollReveal key={item.title} delay={i * 0.05}>
-            <div className="group rounded-lg border bg-card p-5 transition-all hover:border-primary/30 hover:glow">
-              <item.icon className="h-5 w-5 text-primary mb-3" />
-              <h3 className="font-medium text-sm">{item.title}</h3>
-              <p className="text-xs text-muted-foreground mt-1.5">
-                {item.description}
-              </p>
+            <div className="group relative rounded-xl border border-border/50 bg-card/30 backdrop-blur-md p-6 transition-all duration-500 hover:-translate-y-2 hover:border-primary/50 hover:bg-card/50 hover:shadow-[0_0_30px_-5px_rgba(var(--primary),0.3)] overflow-hidden h-full flex flex-col justify-center">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="relative z-10">
+                <item.icon className="h-6 w-6 text-primary mb-4 transition-transform duration-500 group-hover:scale-110 group-hover:text-ring" />
+                <h3 className="font-semibold text-foreground tracking-tight">{item.title}</h3>
+                <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
             </div>
           </ScrollReveal>
         ))}

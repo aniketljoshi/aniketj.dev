@@ -26,8 +26,9 @@ export function FeaturedWork() {
           return (
             <ScrollReveal key={project.slug} delay={i * 0.1}>
               <Link href="/work">
-                <div className="group rounded-lg border bg-card p-6 transition-all hover:border-primary/30 hover:glow">
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div className="group relative rounded-xl border border-border/50 bg-card/30 backdrop-blur-md p-8 transition-all duration-500 hover:-translate-y-2 hover:border-primary/50 hover:bg-card/50 hover:shadow-[0_0_30px_-5px_rgba(var(--primary),0.3)] overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="relative z-10 flex flex-col sm:flex-row sm:items-start justify-between gap-6">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         {project.image && (
@@ -59,7 +60,7 @@ export function FeaturedWork() {
                         {project.stack.slice(0, 6).map((tech) => (
                           <span
                             key={tech}
-                            className="inline-flex items-center gap-1.5 text-xs px-2 py-0.5 rounded-md bg-muted text-muted-foreground"
+                            className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md border border-border/50 bg-background/50 backdrop-blur-sm text-muted-foreground group-hover:border-primary/20 group-hover:text-foreground transition-colors"
                           >
                             <TechIcon name={tech} />
                             {tech}

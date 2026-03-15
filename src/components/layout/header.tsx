@@ -4,6 +4,7 @@ import Link from "next/link";
 import { navigation } from "@/data/navigation";
 import { NavLink } from "./nav-link";
 import { MobileNav } from "./mobile-nav";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
@@ -19,13 +20,15 @@ export function Header() {
   return (
     <header
       className={cn(
-        "fixed top-0 z-50 w-full transition-all duration-300",
-        scrolled
-          ? "border-b bg-background/80 backdrop-blur-md"
-          : "bg-transparent"
+        "fixed top-4 z-50 w-full transition-all duration-300 px-4 flex justify-center",
       )}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+      <div className={cn(
+        "flex h-14 items-center justify-between px-6 rounded-full w-full max-w-5xl transition-all duration-300",
+        scrolled
+          ? "glass-panel shadow-lg border-border/40"
+          : "bg-transparent border border-transparent"
+      )}>
         <Link
           href="/"
           className="font-mono text-sm font-semibold tracking-tight hover:text-primary transition-colors"
@@ -41,7 +44,10 @@ export function Header() {
           ))}
         </nav>
 
-        <MobileNav />
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          <MobileNav />
+        </div>
       </div>
     </header>
   );

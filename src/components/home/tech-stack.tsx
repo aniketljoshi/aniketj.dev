@@ -24,15 +24,15 @@ export function TechStack() {
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {visible.map((category, i) => (
           <ScrollReveal key={category.category} delay={i * 0.05}>
-            <div>
-              <h3 className="font-mono text-xs text-primary uppercase tracking-wider mb-3">
+            <div className="glass-panel p-5 rounded-xl border border-border/50 hover:border-primary/30 transition-all duration-300 h-full">
+              <h3 className="font-mono text-xs text-primary uppercase tracking-wider mb-4 font-semibold">
                 {category.category}
               </h3>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-2">
                 {category.skills.map((skill) => (
                   <span
                     key={skill}
-                    className="inline-flex items-center gap-1.5 text-xs px-2 py-1 rounded-md border bg-card text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md border border-border/50 bg-background/40 backdrop-blur-md text-muted-foreground hover:text-primary hover:border-primary/50 hover:shadow-[0_0_15px_-3px_rgba(var(--primary),0.3)] transition-all duration-300"
                   >
                     <TechIcon name={skill} />
                     {skill}

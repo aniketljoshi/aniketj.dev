@@ -46,8 +46,13 @@ export function AboutSummary() {
             </Link>
           </div>
         </ScrollReveal>
-        <ScrollReveal delay={0.15}>
-          <TerminalBlock lines={terminalLines} />
+        <ScrollReveal delay={0.15} className="h-full">
+          <div className="relative h-full w-full rounded-xl overflow-hidden glass-panel p-1 glow-hover transition-all duration-500">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-ring/10 opacity-50" />
+            <div className="relative z-10 h-full backdrop-blur-3xl bg-background/50 rounded-lg p-0.5">
+              <TerminalBlock lines={terminalLines} />
+            </div>
+          </div>
         </ScrollReveal>
       </div>
     </SectionContainer>

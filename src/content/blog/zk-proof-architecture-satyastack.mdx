@@ -1,0 +1,85 @@
+---
+title: "Designing a Zero-Knowledge Compliance Stack for India"
+description: "How I architected SatyaStack — a privacy-preserving KYC/AML platform using PLONK proofs, Noir circuits, and a trust boundary model where PII never crosses the backend boundary."
+date: "2026-03-14"
+tags: ["architecture", "web3", "zero-knowledge", "privacy", "compliance"]
+published: true
+---
+
+# Designing a Zero-Knowledge Compliance Stack for India
+
+India's regulatory landscape presents a fundamental contradiction. The **Digital Personal Data Protection Act (DPDP)** demands data minimization — store as little PII as possible. Meanwhile, **FIU-IND AML/KYC mandates** require financial entities to collect, verify, and retain identity data. Break one rule to follow the other.
+
+SatyaStack is the infrastructure I designed to resolve this paradox using zero-knowledge proofs.
+
+## The Core Insight
+
+What if you could **prove** a person has valid KYC from a regulated bank — without the verifier ever seeing their Aadhaar number, PAN card, or date of birth?
+
+Zero-knowledge proofs make this mathematically possible. The prover demonstrates knowledge of a fact without revealing the fact itself. SatyaStack operationalizes this into production infrastructure.
+
+## Trust Boundary Architecture
+
+The architecture enforces four explicit trust boundaries:
+
+| Boundary | Trust Level | Data Allowed |
+|---|---|---|
+| **TB-0** Client Device | Full (user-local) | Raw PII (transient), encrypted credentials, proofs |
+| **TB-1** DigiLocker / Gov | State sovereign | KYC source documents, OAuth tokens |
+| **TB-2** SatyaStack Backend | Zero-PII operator | Commitments, nullifiers, proofs, audit metadata |
+| **TB-3** FIU-IND Regulatory | Read-only auditor | Immutable QLDB audit logs |
+
+The **Zero-PII Invariant** is non-negotiable: raw PII never enters the backend. The issuer service processes PII in a single request-scoped memory allocation. PII exists for under 500ms, is never written to disk, database, or logs, and memory is explicitly zeroed before garbage collection.
+
+## The Proof System
+
+I chose **PLONK** with KZG polynomial commitments over Groth16 for a critical reason: PLONK uses a **Universal and Updatable Structured Reference String (SRS)**. This means we don't need a new trusted setup ceremony every time we deploy a new circuit version. The Aztec Ignition ceremony provides the initial SRS, and new circuits compile deterministically from Noir source.
+
+### Three Core Circuits
+
+**1. KYC Membership Proof** — Proves the user holds a valid, non-revoked KYC credential:
+
+```
+vc_hash    = H_tree(VC[0..7])
+commitment = H(vc_hash ‖ pk_D)
+nullifier  = H(pk_D ‖ commitment ‖ domain_tag ‖ challenge)
+```
+
+The nullifier is domain-bound and single-use, preventing replay attacks while preserving unlinkability across different verifiers.
+
+**2. Sanctions Non-Inclusion Proof** — Proves the user's identity commitment is NOT in the sanctions Sparse Merkle Tree. The circuit verifies an SMT non-inclusion proof — the leaf at key `H(commitment)` must equal the empty sentinel.
+
+**3. Age Range Proof** — Proves `DOB ≤ threshold_date` without revealing the actual date of birth. Dates are encoded as days since Unix epoch.
+
+## Implementation Stack
+
+| Layer | Choice | Rationale |
+|---|---|---|
+| Circuit language | **Noir** (Aztec) | Compiles to ACIR, developer-friendly syntax, active ecosystem |
+| Proof backend | **Barretenberg** | BN254 curve, PLONK prover, WASM compilation for mobile |
+| Hash function | **Poseidon** (BN254) | Arithmetic-friendly, ~8x fewer constraints than SHA-256 in circuits |
+| Accumulator | **Sparse Merkle Tree** (depth 256) | Efficient non-inclusion proofs for revocation and sanctions |
+| Issuer service | **Java 21 / Spring Boot 3.3** | Enterprise-grade, strong typing, CloudHSM integration |
+| Verifier service | **Rust / Axum** | Performance-critical path, sub-3ms verification |
+| Mobile vault | **Flutter** with Rust FFI | Cross-platform, native prover via `flutter_rust_bridge` |
+| Signing | **BabyJubJub EdDSA** | Circuit-efficient signature scheme, FIPS 140-2 L3 via CloudHSM |
+
+## Key Design Decisions
+
+### Why Poseidon over SHA-256?
+SHA-256 requires ~25,000 constraints per hash in a PLONK circuit. Poseidon on BN254 requires ~250. For a circuit that performs hierarchical hashing over 8 fields plus a 256-level Merkle path, this difference determines whether proof generation takes 2 seconds or 200 seconds on a mobile device.
+
+### Why Sparse Merkle Trees for Revocation?
+Standard Merkle trees require updating every sibling path when the tree changes. Sparse Merkle Trees allow **constant-size non-inclusion proofs** — critical for the sanctions screening circuit where we need to prove "this commitment is NOT in the tree" efficiently.
+
+### Why Dual Database Strategy?
+- **DynamoDB** for operational state (nullifiers, SMT roots, verification key registry) — sub-millisecond reads at any scale
+- **QLDB** for immutable audit trail — cryptographically verifiable, append-only ledger that satisfies FIU-IND regulatory requirements
+
+## What I Learned
+
+Building SatyaStack taught me that the hardest part of ZK systems isn't the cryptography — it's the trust architecture. Defining what data crosses which boundary, enforcing invariants at the code level (not just documentation), and making the system auditable without compromising privacy.
+
+The 2-second proof generation target on mobile was the engineering constraint that shaped everything else — from hash function choice to circuit optimization to WASM compilation strategy.
+
+*SatyaStack is live at [satyastack.com](https://www.satyastack.com).*

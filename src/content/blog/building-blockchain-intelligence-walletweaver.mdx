@@ -1,0 +1,210 @@
+---
+title: "Building Blockchain Intelligence with Clean Architecture"
+description: "How WalletWeaver processes millions of on-chain transactions using Clean Architecture, Kafka-based indexing, ML clustering for wallet attribution, and a GraphQL API that makes blockchain data queryable."
+date: "2025-10-10"
+tags: ["architecture", "web3", "blockchain", "clean-architecture", "data-engineering"]
+published: true
+---
+
+# Building Blockchain Intelligence with Clean Architecture
+
+WalletWeaver turns raw blockchain data into actionable intelligence — wallet attribution, transaction pattern analysis, risk scoring, and fund flow visualization. Processing millions of on-chain transactions daily requires an architecture that separates concerns ruthlessly. This is how Clean Architecture made it possible to evolve each layer independently.
+
+## The Domain Problem
+
+Raw blockchain data is public but opaque. A Bitcoin transaction tells you:
+
+```
+Input:  bc1q...abc → 0.5 BTC
+Output: bc1q...xyz → 0.3 BTC
+        bc1q...abc → 0.2 BTC (change)
+```
+
+But it doesn't tell you: *Who* sent it? *Why?* Is this a payment, a consolidation, a mixing operation, or a withdrawal from an exchange? WalletWeaver's job is to enrich raw transactions with context, attribution, and risk signals.
+
+## Clean Architecture Layers
+
+```
+┌──────────────────────────────────────────────────┐
+│                  Presentation                      │
+│          GraphQL API  •  REST API  •  WebSocket     │
+├──────────────────────────────────────────────────┤
+│                  Application                       │
+│      Use Cases  •  DTOs  •  Event Handlers          │
+├──────────────────────────────────────────────────┤
+│                    Domain                           │
+│    Entities  •  Value Objects  •  Domain Services    │
+├──────────────────────────────────────────────────┤
+│                Infrastructure                      │
+│  Blockchain Nodes  •  Kafka  •  PostgreSQL  •  Redis │
+└──────────────────────────────────────────────────┘
+```
+
+The **Dependency Rule** is enforced strictly: dependencies point inward. The Domain layer has zero external dependencies — no framework imports, no database annotations, no serialization concerns.
+
+### Domain Layer: Modeling Blockchain Concepts
+
+The domain model captures blockchain-agnostic concepts:
+
+**Entities** (with identity):
+- `Wallet` — A collection of addresses controlled by the same entity
+- `Transaction` — A value transfer between addresses
+- `Cluster` — A group of wallets attributed to the same real-world entity
+- `RiskAssessment` — A point-in-time risk evaluation of a wallet or transaction
+
+**Value Objects** (immutable, compared by value):
+- `Address` — A blockchain address with chain-specific validation
+- `TransactionHash` — A unique transaction identifier
+- `Amount` — A decimal amount with chain-specific precision (BTC: 8 decimals, ETH: 18)
+- `RiskScore` — A 0-100 composite score with category breakdown
+
+**Domain Services**:
+- `WalletClusteringService` — Groups addresses into wallets using heuristics and ML
+- `TransactionTracingService` — Follows fund flows across multiple hops
+- `RiskScoringService` — Calculates composite risk scores using configurable rule engine
+
+### Application Layer: Use Cases
+
+Each use case is a single class with a single `execute` method:
+
+```
+AnalyzeWalletUseCase
+├── Input:  WalletAddress, AnalysisDepth (1-10 hops)
+├── Steps:  1. Resolve address → Wallet (clustering)
+│           2. Fetch transaction history (blockchain indexer)
+│           3. Trace fund flows (graph traversal)
+│           4. Score risk (rule engine + ML model)
+│           5. Generate attribution (entity matching)
+├── Output: WalletAnalysis (risk score, attribution, fund flow graph)
+```
+
+Use cases depend on **ports** (interfaces), not implementations. The `BlockchainPort`, `WalletRepositoryPort`, and `RiskScoringPort` are defined in the application layer and implemented in infrastructure.
+
+## Data Pipeline: Kafka-Based Indexing
+
+### Multi-Chain Block Ingestion
+
+WalletWeaver indexes multiple blockchains in real-time. Each chain has a dedicated **Block Listener** that connects to a full node and streams new blocks:
+
+```
+Bitcoin Node ──▶ BTC Block Listener ──▶ Kafka: raw-blocks-btc
+Ethereum Node ──▶ ETH Block Listener ──▶ Kafka: raw-blocks-eth
+Polygon Node  ──▶ MATIC Block Listener ──▶ Kafka: raw-blocks-matic
+```
+
+**Why Kafka?** Three reasons:
+
+1. **Backpressure handling**: If the processing pipeline falls behind, blocks queue in Kafka instead of being dropped. During the initial historical sync (700K+ Bitcoin blocks), the queue depth reached 50K blocks — Kafka handled it gracefully.
+
+2. **Consumer groups**: Multiple independent consumers process the same block stream — one for transaction indexing, one for address clustering, one for risk scoring. Each consumer tracks its own offset.
+
+3. **Replay capability**: When we deploy a new clustering algorithm, we replay the entire block history to re-cluster all addresses. Kafka's retention policy (30 days) supports this without re-fetching from blockchain nodes.
+
+### Processing Pipeline
+
+```
+raw-blocks ──▶ Block Parser ──▶ parsed-transactions
+                                      │
+                    ┌─────────────────┼─────────────────┐
+                    ▼                 ▼                  ▼
+            Transaction          Address             Risk
+            Indexer              Clusterer            Scorer
+                │                    │                  │
+                ▼                    ▼                  ▼
+            PostgreSQL           PostgreSQL          PostgreSQL
+            (transactions)       (clusters)          (risk_scores)
+```
+
+Each consumer is independently scalable. During peak (Bitcoin halving day), we scaled the Transaction Indexer to 12 partitions / 12 consumers to handle the 4x transaction volume spike.
+
+## ML-Based Wallet Clustering
+
+### The Common-Input-Ownership Heuristic
+
+The foundational heuristic for Bitcoin wallet clustering: if two addresses appear as inputs in the same transaction, they're likely controlled by the same entity. This is because spending from multiple addresses requires the private keys for all of them.
+
+But heuristics alone produce noisy clusters. CoinJoin transactions, for example, deliberately combine inputs from multiple unrelated users — the heuristic would incorrectly merge their wallets.
+
+### ML Enhancement
+
+We train a gradient-boosted classifier (XGBoost) on labeled data to refine heuristic clusters:
+
+**Features** (per address pair):
+- Co-spend frequency (how often they appear together in inputs)
+- Temporal proximity (time between first and last co-spend)
+- Value distribution similarity (KL divergence of transaction amounts)
+- Change address pattern (does one address consistently receive change?)
+- CoinJoin participation score (number of equal-output transactions)
+
+**Training data**: 15,000 labeled address pairs from known exchange addresses, mixer addresses, and manually attributed wallets.
+
+| Model | Precision | Recall | F1 |
+|---|---|---|---|
+| Heuristic only | 0.91 | 0.78 | 0.84 |
+| XGBoost (heuristic + ML) | 0.96 | 0.89 | 0.92 |
+
+The ML model reduced false clustering (merging unrelated wallets) by 55% compared to heuristics alone.
+
+### Entity Attribution
+
+Once addresses are clustered into wallets, we attribute wallets to known entities:
+
+1. **Exchange attribution**: Match against a database of known exchange deposit/withdrawal addresses (sourced from public tags + proprietary research)
+2. **Service attribution**: Identify payment processors, DeFi protocols, and bridges by their on-chain interaction patterns
+3. **Risk attribution**: Flag wallets associated with sanctioned entities, darknet markets, or known scam addresses
+
+## GraphQL API
+
+The presentation layer exposes a GraphQL API that lets clients query the intelligence graph:
+
+```graphql
+type Query {
+  wallet(address: String!, chain: Chain!): Wallet
+  transaction(hash: String!, chain: Chain!): Transaction
+  traceFlow(
+    address: String!
+    chain: Chain!
+    direction: FlowDirection!
+    depth: Int! = 3
+    minAmount: Float
+  ): FlowGraph
+}
+
+type Wallet {
+  addresses: [Address!]!
+  cluster: Cluster
+  riskScore: RiskScore!
+  transactions(first: Int, after: String): TransactionConnection!
+  fundFlows(depth: Int! = 3): FlowGraph!
+}
+
+type FlowGraph {
+  nodes: [FlowNode!]!
+  edges: [FlowEdge!]!
+  totalVolume: Amount!
+  riskExposure: RiskExposure!
+}
+```
+
+**Why GraphQL over REST?** Blockchain intelligence queries are inherently graph-shaped. A client analyzing a wallet needs its addresses, recent transactions, risk score, and fund flow graph — all in one request. With REST, this requires 4+ round trips. With GraphQL, it's a single query.
+
+### Performance Optimization
+
+The `traceFlow` query is computationally expensive — it performs a breadth-first graph traversal across potentially millions of transactions. We optimize with:
+
+1. **Dataloader batching**: Address lookups are batched per-hop to minimize database round trips
+2. **Materialized flow summaries**: For frequently queried addresses (exchanges, large wallets), pre-computed flow summaries are cached in Redis
+3. **Depth limiting**: Maximum 10 hops, with exponential cost increase per hop. Deeper analysis runs as async jobs
+4. **Result caching**: GraphQL response caching with 5-minute TTL for non-real-time queries
+
+P95 latency for a 3-hop trace on a moderately active wallet: 1.2 seconds.
+
+## What I Learned
+
+**Clean Architecture's value is in evolution.** When we added Polygon support 6 months after launch, the domain and application layers required zero changes. We added a new `PolygonBlockListener` in infrastructure, registered it, and it worked. The `Address` value object already validated chain-specific formats via a strategy pattern.
+
+**Kafka replay is a superpower.** Every time we improve the clustering algorithm, we replay historical blocks and re-cluster. Without replay capability, we'd be stuck with the accuracy of our initial algorithm forever.
+
+**GraphQL + blockchain = natural fit.** The graph-shaped nature of blockchain data (addresses → transactions → addresses) maps perfectly to GraphQL's query model. Clients can explore the transaction graph with exactly the depth and fields they need.
+
+*WalletWeaver is live at [walletweaver.com](https://www.walletweaver.com).*

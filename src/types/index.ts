@@ -16,6 +16,7 @@ export interface Project {
   repoUrl?: string;
   featured: boolean;
   relatedCaseStudy?: string;
+  relatedBlog?: string;
 }
 
 export interface CaseStudy {

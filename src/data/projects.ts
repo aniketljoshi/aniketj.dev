@@ -2,6 +2,107 @@ import type { Project } from "@/types";
 
 export const projects: Project[] = [
   {
+    slug: "satyastack",
+    title: "SatyaStack",
+    tagline:
+      "Privacy-preserving zero-knowledge compliance infrastructure for India",
+    description:
+      "Built to verify regulatory compliance (KYC, sanctions, solvency) without exposing PII, addressing the conflict between India's DPDP Act and AML/KYC requirements. Uses PLONK/KZG proofs with Noir circuits for on-chain and off-chain verification.",
+    problem:
+      "India's Digital Personal Data Protection Act conflicts with AML/KYC requirements — businesses must verify compliance without storing or exposing personal data. Traditional solutions leak PII across trust boundaries.",
+    role: "Founder & Software Architect",
+    duration: "2025 — Present",
+    stack: [
+      "Noir",
+      "Rust",
+      "Spring Boot",
+      "Flutter",
+      "AWS",
+      "Terraform",
+      "DynamoDB",
+      "QLDB",
+      "WASM",
+    ],
+    domain: "Web3",
+    highlights: [
+      "Designed ZK circuit architecture using PLONK (KZG) with Noir for KYC membership, sanctions, and age-range proofs",
+      "Built issuer service (Java/Spring Boot) and verifier service (Rust/Axum) with strict PII isolation",
+      "Implemented mobile credential vault in Flutter with native FFI to Rust prover",
+      "Multi-language SDK suite (TypeScript, Java, C#, Python) auto-generated from OpenAPI specs",
+      "Infrastructure provisioned via Terraform across dev/stage/prod AWS environments",
+    ],
+    architectureNotes:
+      "Trust boundary model with zero PII crossing verification boundary. Dual Sparse Merkle Tree for revocation, QLDB for audit trail, DynamoDB for state. Path-triggered CI/CD with per-service deployments.",
+    image: "/projects/satyastack.png",
+    featured: true,
+  },
+  {
+    slug: "artistskonnect",
+    title: "ArtistsKonnect",
+    tagline:
+      "Platform connecting artists and clients for bookings with real-time chat",
+    description:
+      "Full-stack artist booking platform with role-based authentication, S3/Cloudflare R2 storage integration, real-time chat via SignalR, and cross-platform mobile apps.",
+    problem:
+      "Artists and clients lack a unified platform for discovery, booking, and communication. Existing marketplaces don't cater to the unique workflow of artist bookings with portfolio management and real-time coordination.",
+    role: "Founder & Software Architect",
+    duration: "2025 — Present",
+    stack: [
+      ".NET 10",
+      "Next.js",
+      "Flutter",
+      "PostgreSQL",
+      "Supabase Auth",
+      "Cloudflare R2",
+      "SignalR",
+      "Docker",
+    ],
+    domain: "Ecommerce",
+    highlights: [
+      "Architected clean architecture backend with .NET 10 (API, Application, Domain, Infrastructure layers)",
+      "Built real-time chat using SignalR with message persistence",
+      "Integrated Cloudflare R2 via S3-compatible presigned URLs for portfolio uploads",
+      "Implemented Supabase Auth with JWT validation in both shared-secret and JWKS modes",
+      "Cross-platform mobile app in Flutter with OTP-based authentication",
+    ],
+    architectureNotes:
+      "Clean architecture with DDD. Backend exposes REST API + SignalR hubs. Supabase handles auth, R2 handles media storage with presigned URLs. Docker Compose for local dev with MinIO and InBucket emulators.",
+    image: "/projects/artistskonnect.png",
+    featured: true,
+  },
+  {
+    slug: "audel-medical-logistics",
+    title: "Audel Medical Logistics",
+    tagline:
+      "Medical logistics and delivery app with offline capabilities and real-time tracking",
+    description:
+      "Comprehensive medical logistics application for delivery agents to manage routes, parcels, and deliveries with offline capabilities, real-time tracking, and camera/geolocation integration.",
+    problem:
+      "Medical delivery agents need reliable route management and parcel tracking that works in areas with poor connectivity, while maintaining audit trails for regulated medical supplies.",
+    role: "Software Architect",
+    duration: "2025 — Present",
+    stack: [
+      "Java",
+      "React",
+      "Vite",
+      "TypeScript",
+      "Flutter",
+      "Supabase",
+      "Radix UI",
+    ],
+    domain: "Healthcare",
+    highlights: [
+      "Designed multi-platform architecture: Java backend, React web dashboard, Flutter mobile app",
+      "Built offline-first mobile app with camera and geolocation integration for delivery verification",
+      "Created web admin dashboard with React/Vite for route and fleet management",
+      "Implemented real-time delivery tracking with Supabase real-time subscriptions",
+    ],
+    architectureNotes:
+      "Multi-platform architecture with shared API. Offline-first mobile design with local-first data sync. Figma-driven design system for consistent UI across web and mobile.",
+    image: "/projects/audel.png",
+    featured: true,
+  },
+  {
     slug: "walletweaver",
     title: "WalletWeaver",
     tagline:
@@ -34,7 +135,8 @@ export const projects: Project[] = [
     ],
     architectureNotes:
       "Event-driven architecture with background job orchestration. Multi-chain data ingestion through RPC providers, with webhook-based alerting and real-time monitoring pipelines.",
-    featured: true,
+    image: "/projects/walletweaver-logo.svg",
+    featured: false,
   },
   {
     slug: "bitcoin-india-conference",
@@ -69,7 +171,7 @@ export const projects: Project[] = [
     ],
     architectureNotes:
       "Hybrid architecture retaining Supabase for verified user persistence and analytics, with AWS handling the high-throughput OTP and registration flow. Queue-based processing with SQS for reliable delivery.",
-    featured: true,
+    featured: false,
   },
   {
     slug: "cryptowala-exchange",
@@ -103,7 +205,7 @@ export const projects: Project[] = [
     ],
     architectureNotes:
       "Multi-service architecture with dedicated custody, compliance, and payment rail integrations. Audit-grade logging and tiered identity verification for regulatory compliance.",
-    featured: true,
+    featured: false,
   },
   {
     slug: "ai-documentation-search",

@@ -72,7 +72,7 @@ export function Hero() {
             >
               Web3 applications
             </MotionSpan>
-            . 11+ years architecting production systems across healthcare,
+            . 12+ years architecting production systems across healthcare,
             logistics, banking, and blockchain.
           </p>
         </MotionDiv>
@@ -99,7 +99,7 @@ export function Hero() {
         >
           <span>6x Azure Certified</span>
           <span className="text-border">|</span>
-          <span>11+ Years</span>
+          <span>12+ Years</span>
           <span className="text-border">|</span>
           <span>Architect @ Vanderlande</span>
         </MotionDiv>

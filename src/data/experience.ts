@@ -4,6 +4,7 @@ export const experience: Experience[] = [
   {
     company: "Vanderlande",
     companyDescription: "Logistics process automation",
+    companyLogo: "/companies/vanderlande.png",
     role: "Architect / Specialist Software Engineering",
     location: "Pune, India",
     period: "May 2023 — Present",
@@ -30,6 +31,7 @@ export const experience: Experience[] = [
   {
     company: "Caizin",
     companyDescription: "Software company",
+    companyLogo: "/companies/caizin.png",
     role: "Software Architect",
     location: "Pune, India",
     period: "Jun 2022 — May 2023",
@@ -42,6 +44,7 @@ export const experience: Experience[] = [
   {
     company: "GoKloud",
     companyDescription: "Cloud management company",
+    companyLogo: "/companies/gokloud.png",
     role: "Technical Lead",
     location: "Pune, India",
     period: "Jun 2021 — May 2022",
@@ -54,6 +57,7 @@ export const experience: Experience[] = [
   {
     company: "MediaAgility",
     companyDescription: "AI and ML technology provider",
+    companyLogo: "/companies/mediaagility.jpeg",
     role: "Consultant",
     location: "Pune, India",
     period: "Mar 2021 — Jun 2021",
@@ -65,6 +69,7 @@ export const experience: Experience[] = [
   {
     company: "Tavisca, A JPMorgan Chase & Co",
     companyDescription: "Loyalty and travel technology",
+    companyLogo: "/companies/jpmorgan.jpeg",
     role: "Sr. Full Stack Software Developer",
     location: "Pune, India",
     period: "Jul 2019 — Mar 2021",
@@ -78,6 +83,7 @@ export const experience: Experience[] = [
   {
     company: "UPS Logistics PVT LTD",
     companyDescription: "Logistics and transportation",
+    companyLogo: "/companies/ups.jpeg",
     role: "Full Stack Software Developer",
     location: "Pune, India",
     period: "Oct 2017 — Jun 2019",
@@ -90,6 +96,7 @@ export const experience: Experience[] = [
   },
   {
     company: "LogicalDNA Solutions",
+    companyLogo: "/companies/logicaldna.jpeg",
     role: "Software Developer",
     location: "Pune, India",
     period: "Jun 2016 — Oct 2017",
@@ -98,6 +105,7 @@ export const experience: Experience[] = [
   },
   {
     company: "Econsign Soft",
+    companyLogo: "/companies/econsign.jpeg",
     role: "Software Developer",
     location: "Pune, India",
     period: "Sep 2015 — May 2016",
@@ -106,6 +114,7 @@ export const experience: Experience[] = [
   },
   {
     company: "Noetic Systems",
+    companyLogo: "/companies/noetic.jpeg",
     role: "Software Developer",
     location: "Pune, India",
     period: "Jun 2014 — Aug 2015",

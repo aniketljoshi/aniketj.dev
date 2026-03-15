@@ -10,6 +10,7 @@ import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import { TechIcon } from "@/components/shared/tech-icon";
 import { projects } from "@/data/projects";
 import { caseStudies } from "@/data/case-studies";
+import { ArchitectureDiagram } from "@/components/diagrams/architecture-diagram";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -67,6 +68,7 @@ export default async function ProjectDetailPage({
                 width={40}
                 height={40}
                 className="rounded-lg shrink-0"
+                unoptimized={project.image.endsWith(".svg")}
               />
             )}
             <h1 className="text-4xl font-bold tracking-tight">
@@ -112,6 +114,7 @@ export default async function ProjectDetailPage({
               <p className="text-muted-foreground leading-relaxed">
                 {project.architectureNotes}
               </p>
+              <ArchitectureDiagram slug={project.slug} className="mt-6" />
             </div>
           </ScrollReveal>
         )}

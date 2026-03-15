@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  images: {
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
   async headers() {
     return [
       {
@@ -42,21 +47,13 @@ const nextConfig: NextConfig = {
         destination: "/work",
         permanent: true,
       },
-      {
-        source: "/projects/:slug",
-        destination: "/work",
-        permanent: true,
-      },
+
       {
         source: "/case-studies",
         destination: "/work",
         permanent: true,
       },
-      {
-        source: "/case-studies/:slug",
-        destination: "/work",
-        permanent: true,
-      },
+
     ];
   },
 };

@@ -51,14 +51,31 @@ export async function POST(req: Request) {
       );
     }
 
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
-      from: "Portfolio Contact <onboarding@resend.dev>",
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      console.error("RESEND_API_KEY is not configured");
+      return NextResponse.json(
+        { error: "Email service is not configured." },
+        { status: 503 }
+      );
+    }
+
+    const resend = new Resend(apiKey);
+    const { data, error: sendError } = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL ?? "Portfolio Contact <contact@aniketj.dev>",
       to: process.env.CONTACT_EMAIL ?? "joshi.aniket@proton.me",
       subject: `[aniketj.dev] ${subject}`,
       replyTo: email,
       text: `Name: ${name}\nEmail: ${email}\nSubject: ${subject}\n\n${message}`,
     });
+
+    if (sendError) {
+      console.error("Resend API error:", sendError);
+      return NextResponse.json(
+        { error: "Failed to send message. Please try again." },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

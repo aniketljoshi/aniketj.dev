@@ -172,6 +172,7 @@ export const projects: Project[] = [
     architectureNotes:
       "Hybrid architecture retaining Supabase for verified user persistence and analytics, with AWS handling the high-throughput OTP and registration flow. Queue-based processing with SQS for reliable delivery.",
     featured: false,
+    relatedCaseStudy: "high-scale-registration",
   },
   {
     slug: "cryptowala-exchange",
@@ -206,6 +207,7 @@ export const projects: Project[] = [
     architectureNotes:
       "Multi-service architecture with dedicated custody, compliance, and payment rail integrations. Audit-grade logging and tiered identity verification for regulatory compliance.",
     featured: false,
+    relatedCaseStudy: "p2p-exchange-architecture",
   },
   {
     slug: "ai-documentation-search",
@@ -236,6 +238,7 @@ export const projects: Project[] = [
       "Automated infrastructure via Bicep for reproducible deployments",
     ],
     featured: false,
+    relatedCaseStudy: "rag-documentation-search",
   },
   {
     slug: "keycloak-migration",
@@ -264,6 +267,7 @@ export const projects: Project[] = [
       "Automated infrastructure provisioning with Bicep templates",
     ],
     featured: false,
+    relatedCaseStudy: "keycloak-identity-migration",
   },
   {
     slug: "encryption-suite",

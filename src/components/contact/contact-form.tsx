@@ -28,6 +28,7 @@ export function ContactForm() {
           email: data.get("email"),
           subject: data.get("subject"),
           message: data.get("message"),
+          website: data.get("website"),
         }),
       });
 
@@ -65,12 +66,17 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Honeypot — hidden from real users, bots fill it */}
+      <div className="absolute opacity-0 pointer-events-none" aria-hidden="true">
+        <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+      </div>
+
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <label htmlFor="name" className="text-sm font-medium mb-1.5 block">
             Name
           </label>
-          <Input id="name" name="name" required placeholder="Your name" />
+          <Input id="name" name="name" required placeholder="Your name" aria-describedby={error ? "form-error" : undefined} />
         </div>
         <div>
           <label htmlFor="email" className="text-sm font-medium mb-1.5 block">
@@ -106,7 +112,7 @@ export function ContactForm() {
         />
       </div>
 
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p id="form-error" className="text-sm text-destructive" role="alert">{error}</p>}
 
       <Button type="submit" disabled={sending} className="w-full sm:w-auto">
         {sending ? (

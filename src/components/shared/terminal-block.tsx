@@ -13,7 +13,7 @@ export function TerminalBlock({ lines, className }: TerminalBlockProps) {
         className
       )}
     >
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-4" aria-hidden="true">
         <div className="h-3 w-3 rounded-full bg-red-500/70" />
         <div className="h-3 w-3 rounded-full bg-yellow-500/70" />
         <div className="h-3 w-3 rounded-full bg-green-500/70" />

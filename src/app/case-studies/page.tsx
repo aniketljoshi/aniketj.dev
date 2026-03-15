@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: "Case Studies",
   description:
     "Architecture deep-dives into system design decisions, tradeoffs, and outcomes.",
+  alternates: { canonical: "/case-studies" },
 };
 
 export default function CaseStudiesPage() {

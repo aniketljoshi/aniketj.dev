@@ -10,6 +10,7 @@ import { socialLinks } from "@/data/social";
 export const metadata: Metadata = {
   title: "Contact",
   description: "Get in touch — let's discuss architecture, systems, or collaboration.",
+  alternates: { canonical: "/contact" },
 };
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {

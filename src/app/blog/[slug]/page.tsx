@@ -5,6 +5,8 @@ import { ArrowLeft } from "lucide-react";
 import { SectionContainer } from "@/components/shared/section-container";
 import { getAllPosts, getPostBySlug } from "@/lib/mdx";
 import { compileMDX } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
+import rehypePrettyCode from "rehype-pretty-code";
 
 export async function generateStaticParams() {
   const posts = await getAllPosts();
@@ -22,6 +24,18 @@ export async function generateMetadata({
   return {
     title: post.meta.title,
     description: post.meta.description,
+    alternates: { canonical: `/blog/${slug}` },
+    openGraph: {
+      title: post.meta.title,
+      description: post.meta.description,
+      type: "article",
+      publishedTime: post.meta.date,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.meta.title,
+      description: post.meta.description,
+    },
   };
 }
 
@@ -50,7 +64,7 @@ export default async function BlogPostPage({
               {post.meta.title}
             </h1>
             <div className="flex items-center gap-3 mt-3 text-sm text-muted-foreground">
-              <time>
+              <time dateTime={post.meta.date}>
                 {new Date(post.meta.date).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
@@ -86,7 +100,13 @@ export default async function BlogPostPage({
 async function MDXContent({ source }: { source: string }) {
   const { content } = await compileMDX({
     source,
-    options: { parseFrontmatter: true },
+    options: {
+      parseFrontmatter: true,
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+        rehypePlugins: [[rehypePrettyCode, { theme: "github-dark-dimmed" }]],
+      },
+    },
   });
   return content;
 }

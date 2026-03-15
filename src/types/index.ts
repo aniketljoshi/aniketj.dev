@@ -15,6 +15,7 @@ export interface Project {
   liveUrl?: string;
   repoUrl?: string;
   featured: boolean;
+  relatedCaseStudy?: string;
 }
 
 export interface CaseStudy {
@@ -29,6 +30,7 @@ export interface CaseStudy {
   stack: string[];
   diagramUrl?: string;
   featured: boolean;
+  relatedProject?: string;
 }
 
 export interface Experience {

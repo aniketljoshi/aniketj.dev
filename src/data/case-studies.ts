@@ -30,6 +30,7 @@ export const caseStudies: CaseStudy[] = [
       "Cloudflare Turnstile",
     ],
     featured: true,
+    relatedProject: "bitcoin-india-conference",
   },
   {
     slug: "rag-documentation-search",
@@ -59,6 +60,7 @@ export const caseStudies: CaseStudy[] = [
       "RAG",
     ],
     featured: true,
+    relatedProject: "ai-documentation-search",
   },
   {
     slug: "keycloak-identity-migration",
@@ -87,6 +89,7 @@ export const caseStudies: CaseStudy[] = [
       "Key Vault",
     ],
     featured: true,
+    relatedProject: "keycloak-migration",
   },
   {
     slug: "p2p-exchange-architecture",
@@ -117,5 +120,6 @@ export const caseStudies: CaseStudy[] = [
       "TRM Labs",
     ],
     featured: false,
+    relatedProject: "cryptowala-exchange",
   },
 ];

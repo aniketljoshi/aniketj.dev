@@ -17,41 +17,49 @@ const expertise = [
     icon: Layers,
     title: "Software Architecture",
     description: "Distributed systems, DDD, microservices, and API design",
+    number: "01",
   },
   {
     icon: Cloud,
     title: "Cloud Infrastructure",
-    description: "Azure, AWS, GCP — multi-cloud design and IaC",
+    description: "Azure, AWS, GCP - multi-cloud design and IaC",
+    number: "02",
   },
   {
     icon: Server,
     title: "Backend Platforms",
     description: ".NET, Java, Spring Boot, Node.js, GraphQL",
+    number: "03",
   },
   {
     icon: Shield,
-    title: "Identity & Security",
+    title: "Identity and Security",
     description: "Keycloak, OAuth2, OIDC, SSO, encryption, PCI compliance",
+    number: "04",
   },
   {
     icon: Brain,
-    title: "AI & Data Systems",
+    title: "AI and Data Systems",
     description: "RAG pipelines, agentic AI, Databricks, vector search",
+    number: "05",
   },
   {
     icon: Link2,
-    title: "Web3 & Blockchain",
+    title: "Web3 and Blockchain",
     description: "Solidity, Rust/Anchor, Solana, EVM, smart contracts",
+    number: "06",
   },
   {
     icon: Cpu,
-    title: "DevOps & Platform",
+    title: "DevOps and Platform",
     description: "K8s, Docker, CI/CD, Bicep, Terraform, observability",
+    number: "07",
   },
   {
     icon: Code2,
     title: "Product Engineering",
-    description: "React, Next.js, Flutter, TypeScript — full-stack delivery",
+    description: "React, Next.js, Flutter, TypeScript - full-stack delivery",
+    number: "08",
   },
 ];
 
@@ -60,20 +68,27 @@ export function ExpertiseGrid() {
     <SectionContainer>
       <SectionHeading
         title="Core Expertise"
+        eyebrow="Skills"
         description="The domains and disciplines I work across"
       />
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {expertise.map((item, i) => (
           <ScrollReveal key={item.title} delay={i * 0.05}>
-            <div className="group relative rounded-xl border border-border/50 bg-card/30 backdrop-blur-md p-6 transition-all duration-500 hover:-translate-y-2 hover:border-primary/50 hover:bg-card/50 hover:shadow-[0_0_30px_-5px_rgba(var(--primary),0.3)] overflow-hidden h-full flex flex-col justify-center">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative z-10">
-                <item.icon className="h-6 w-6 text-primary mb-4 transition-transform duration-500 group-hover:scale-110 group-hover:text-ring" />
-                <h3 className="font-semibold text-foreground tracking-tight">{item.title}</h3>
-                <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-                  {item.description}
-                </p>
+            <div className="group bento-card relative rounded-xl p-6 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 border border-primary/20 group-hover:bg-primary/20 transition-colors">
+                  <item.icon className="h-5 w-5 text-primary" />
+                </div>
+                <span className="font-mono text-xs text-muted-foreground/40 group-hover:text-muted-foreground/70 transition-colors">
+                  {item.number}
+                </span>
               </div>
+              <h3 className="font-semibold text-foreground text-sm tracking-tight mb-2">
+                {item.title}
+              </h3>
+              <p className="text-xs text-muted-foreground leading-relaxed flex-1">
+                {item.description}
+              </p>
             </div>
           </ScrollReveal>
         ))}

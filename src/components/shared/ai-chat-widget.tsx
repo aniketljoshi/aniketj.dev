@@ -22,7 +22,7 @@ const SUGGESTIONS = [
 ];
 
 const INITIAL_MESSAGE =
-  "Hi! I'm Aniket's AI assistant powered by GPT-4o-mini. Ask me anything about his projects, experience, skills, or certifications!";
+  "Hi! I'm Aniket's AI assistant. Ask me anything about his projects, experience, skills, or certifications!";
 
 function getMessageText(msg: {
   parts?: Array<{ type: string; text?: string }>;
@@ -208,7 +208,7 @@ export function AiChatWidget() {
 
   return (
     <>
-      {/* Minimized — Bot icon with label */}
+      {/* Minimized — circular Bot icon */}
       {!isOpen && (
         <MotionDiv
           initial={{ scale: 0.95, opacity: 0, y: 16 }}
@@ -223,19 +223,11 @@ export function AiChatWidget() {
         >
           <button
             onClick={() => setIsOpen(true)}
-            className="group relative flex items-center gap-3 rounded-2xl border border-primary/20 bg-background/95 px-4 py-3 text-left shadow-2xl shadow-primary/10 backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-primary/20"
+            className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary via-primary to-ring text-primary-foreground shadow-2xl shadow-primary/25 transition-all hover:-translate-y-0.5 hover:shadow-primary/40"
             aria-label="Open AI Assistant"
           >
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary via-primary to-ring text-primary-foreground shadow-lg shadow-primary/25">
-              <Bot className="h-5 w-5" />
-            </div>
-            <div className="pr-2">
-              <div className="text-sm font-semibold">AI Assistant</div>
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                Ready to help! Online
-              </div>
-            </div>
+            <Bot className="h-6 w-6" />
+            <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full border-2 border-background bg-emerald-400 shadow-[0_0_10px_rgba(74,222,128,0.7)]" />
           </button>
         </MotionDiv>
       )}

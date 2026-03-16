@@ -3,6 +3,7 @@ import { inter, jetbrainsMono } from "@/lib/fonts";
 import { LazyMotionProvider } from "@/components/motion";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { AiChatWidget } from "@/components/shared/ai-chat-widget";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Analytics } from "@vercel/analytics/react";
@@ -63,6 +64,7 @@ export default function RootLayout({
               <Header />
               <main id="main-content" className="pt-16">{children}</main>
               <Footer />
+              <AiChatWidget />
             </TooltipProvider>
           </LazyMotionProvider>
         </ThemeProvider>

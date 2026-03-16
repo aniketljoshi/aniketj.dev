@@ -49,28 +49,31 @@ export default function AboutPage() {
       />
 
       {/* Profile */}
-      <SectionContainer className="py-12">
-        <div className="flex flex-col md:flex-row gap-8 items-start">
-          <ScrollReveal>
-            <Image
-              src="/images/aniket.jpg"
-              alt="Aniket Joshi"
-              width={200}
-              height={200}
-              className="rounded-xl border shrink-0"
-              priority
-            />
+      <SectionContainer className="py-14">
+        <div className="flex flex-col md:flex-row gap-10 items-start">
+          <ScrollReveal direction="left">
+            <div className="relative">
+              <div className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-primary/20 via-transparent to-ring/10 blur-xl" />
+              <Image
+                src="/images/aniket.jpg"
+                alt="Aniket Joshi"
+                width={200}
+                height={200}
+                className="relative rounded-2xl border border-border/40 shrink-0 shadow-lg"
+                priority
+              />
+            </div>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
-            <div className="space-y-4">
-              <p className="text-muted-foreground leading-relaxed">
+            <div className="space-y-5">
+              <p className="text-muted-foreground leading-relaxed text-[15px]">
                 I&apos;m a Software Architect with over a decade of experience
                 building production systems across healthcare, logistics, banking,
                 ecommerce, and blockchain. My work sits at the intersection of
                 backend architecture, cloud infrastructure, and product
                 engineering.
               </p>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed text-[15px]">
                 Currently at Vanderlande, I lead AI-driven features on enterprise
                 platforms using RAG pipelines, Databricks, and Azure services.
                 Outside of work, I build Web3 products — from zero-knowledge
@@ -80,6 +83,7 @@ export default function AboutPage() {
                 <Button
                   variant="outline"
                   size="sm"
+                  className="rounded-xl hover:border-primary/40 transition-all duration-300"
                   render={
                     <a href="/resume/aniket-joshi-web2.pdf" download />
                   }
@@ -89,6 +93,7 @@ export default function AboutPage() {
                 <Button
                   variant="outline"
                   size="sm"
+                  className="rounded-xl hover:border-primary/40 transition-all duration-300"
                   render={
                     <a href="/resume/aniket-joshi-web3.pdf" download />
                   }
@@ -102,14 +107,14 @@ export default function AboutPage() {
       </SectionContainer>
 
       {/* Philosophy */}
-      <SectionContainer className="py-12">
+      <SectionContainer className="py-14">
         <SectionHeading title="How I Think About Architecture" />
         <div className="grid sm:grid-cols-2 gap-4">
           {principles.map((p, i) => (
-            <ScrollReveal key={p.title} delay={i * 0.05}>
-              <div className="rounded-lg border bg-card p-5">
-                <h3 className="font-medium text-sm">{p.title}</h3>
-                <p className="text-sm text-muted-foreground mt-2">
+            <ScrollReveal key={p.title} delay={i * 0.06}>
+              <div className="bento-card rounded-xl p-6 h-full">
+                <h3 className="font-semibold text-sm">{p.title}</h3>
+                <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
                   {p.description}
                 </p>
               </div>
@@ -119,17 +124,17 @@ export default function AboutPage() {
       </SectionContainer>
 
       {/* Experience Timeline */}
-      <SectionContainer className="py-12">
+      <SectionContainer className="py-14">
         <SectionHeading title="Experience" />
         <div className="space-y-8">
           {experience.map((exp, i) => (
             <ScrollReveal key={`${exp.company}-${exp.period}`} delay={i * 0.05}>
-              <div className="relative pl-6 border-l border-border">
+              <div className="relative pl-7 border-l-2 border-border/40 hover:border-primary/30 transition-colors duration-500">
                 {exp.current && (
-                  <div className="absolute left-[-5px] top-1 h-2.5 w-2.5 rounded-full bg-primary" />
+                  <div className="absolute left-[-6px] top-1 h-2.5 w-2.5 rounded-full bg-primary shadow-md shadow-primary/30" />
                 )}
                 {!exp.current && (
-                  <div className="absolute left-[-4px] top-1.5 h-2 w-2 rounded-full bg-muted-foreground/50" />
+                  <div className="absolute left-[-5px] top-1.5 h-2 w-2 rounded-full bg-muted-foreground/40" />
                 )}
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 mb-1">
                   <h3 className="font-medium">{exp.role}</h3>
@@ -174,7 +179,7 @@ export default function AboutPage() {
                     {exp.stack.map((tech) => (
                       <span
                         key={tech}
-                        className="text-xs px-2 py-0.5 rounded-md bg-muted text-muted-foreground"
+                        className="text-xs px-2.5 py-1 rounded-lg bg-muted/60 text-muted-foreground border border-border/30"
                       >
                         {tech}
                       </span>
@@ -188,12 +193,12 @@ export default function AboutPage() {
       </SectionContainer>
 
       {/* Certifications */}
-      <SectionContainer className="py-12">
+      <SectionContainer className="py-14">
         <SectionHeading title="Certifications" />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {certifications.map((cert, i) => {
             const content = (
-              <div className="rounded-lg border bg-card p-4 h-full transition-colors hover:border-primary/30 group">
+              <div className="bento-card rounded-xl p-5 h-full group">
                 <div className="flex items-center gap-3">
                   {cert.badgeImage && (
                     <Image
@@ -240,7 +245,7 @@ export default function AboutPage() {
       </SectionContainer>
 
       {/* Education */}
-      <SectionContainer className="py-12">
+      <SectionContainer className="py-14">
         <SectionHeading title="Education" />
         <ScrollReveal>
           <div className="space-y-4">

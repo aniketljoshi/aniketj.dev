@@ -41,7 +41,7 @@ export function WorkGrid({ projects, caseStudies }: WorkGridProps) {
   return (
     <div>
       {/* Domain filter */}
-      <div className="flex flex-wrap gap-2 mb-8">
+      <div className="flex flex-wrap gap-2 mb-10">
         <Filter className="h-4 w-4 text-muted-foreground mt-1.5 mr-1" />
         {domains.map((d) => (
           <Button
@@ -49,7 +49,7 @@ export function WorkGrid({ projects, caseStudies }: WorkGridProps) {
             variant={filter === d ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter(d)}
-            className="text-xs"
+            className="text-xs rounded-full"
           >
             {d}
           </Button>
@@ -65,10 +65,10 @@ export function WorkGrid({ projects, caseStudies }: WorkGridProps) {
 
           return (
             <ScrollReveal key={project.slug} delay={i * 0.03}>
-              <div className="rounded-lg border bg-card transition-all hover:border-primary/30">
+              <div className="bento-card rounded-xl transition-all">
                 {/* Card header — always visible */}
                 <div
-                  className="p-6 cursor-pointer"
+                  className="p-7 cursor-pointer"
                   onClick={() =>
                     setExpandedSlug(isExpanded ? null : project.slug)
                   }
@@ -126,11 +126,11 @@ export function WorkGrid({ projects, caseStudies }: WorkGridProps) {
                   </div>
 
                   {/* Tech badges — always visible */}
-                  <div className="flex flex-wrap gap-1.5 mt-3">
+                  <div className="flex flex-wrap gap-2 mt-3">
                     {project.stack.slice(0, 8).map((tech) => (
                       <span
                         key={tech}
-                        className="inline-flex items-center gap-1.5 text-xs px-2 py-0.5 rounded-md bg-muted text-muted-foreground"
+                        className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg bg-muted/60 text-muted-foreground border border-border/30"
                       >
                         <TechIcon name={tech} />
                         {tech}
@@ -146,7 +146,7 @@ export function WorkGrid({ projects, caseStudies }: WorkGridProps) {
 
                 {/* Expanded detail */}
                 {isExpanded && (
-                  <div className="border-t px-6 py-6 space-y-6">
+                  <div className="border-t border-border/30 px-7 py-7 space-y-6">
                     {/* Problem */}
                     <div>
                       <h3 className="text-sm font-semibold mb-2">The Problem</h3>
@@ -237,7 +237,7 @@ export function WorkGrid({ projects, caseStudies }: WorkGridProps) {
                         {project.stack.map((tech) => (
                           <span
                             key={tech}
-                            className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md border bg-card text-muted-foreground"
+                            className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg border border-border/30 bg-card/60 text-muted-foreground"
                           >
                             <TechIcon name={tech} />
                             {tech}

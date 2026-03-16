@@ -1,9 +1,13 @@
-﻿import Link from "next/link";
+﻿"use client";
+
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SectionContainer } from "@/components/shared/section-container";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { TerminalBlock } from "@/components/shared/terminal-block";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
+import { AnimatedCounter } from "@/components/ui/animated-counter";
 
 const terminalLines = [
   { label: "name", value: "Aniket Joshi" },
@@ -29,8 +33,8 @@ export function AboutSummary() {
 
         {/* Left - text + stats */}
         <ScrollReveal>
-          <div className="space-y-6">
-            <div className="space-y-4 text-muted-foreground leading-relaxed">
+          <div className="space-y-8">
+            <div className="space-y-4 text-muted-foreground leading-relaxed text-[15px]">
               <p>
                 I&apos;m a Software Architect with over a decade of experience
                 building production systems across healthcare, logistics, banking,
@@ -50,22 +54,26 @@ export function AboutSummary() {
               </p>
               <Link
                 href="/about"
-                className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 font-medium transition-colors mt-2"
+                className="group inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 font-semibold transition-colors mt-3"
               >
-                Read more <ArrowRight className="h-3.5 w-3.5" />
+                Read more
+                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </div>
 
             {/* Stats row */}
             <div className="grid grid-cols-2 gap-3 pt-2">
               {highlights.map((h) => (
-                <div
+                <SpotlightCard
                   key={h.label}
-                  className="bento-card p-4 rounded-xl flex flex-col gap-0.5"
+                  className="bento-card p-5 rounded-xl flex flex-col gap-1"
                 >
-                  <span className="text-2xl font-bold tracking-tight text-gradient">{h.value}</span>
-                  <span className="text-xs text-muted-foreground">{h.label}</span>
-                </div>
+                  <AnimatedCounter
+                    value={h.value}
+                    className="text-3xl font-bold tracking-tight text-gradient"
+                  />
+                  <span className="text-xs text-muted-foreground font-medium">{h.label}</span>
+                </SpotlightCard>
               ))}
             </div>
           </div>
@@ -75,7 +83,7 @@ export function AboutSummary() {
         <ScrollReveal delay={0.15} className="h-full">
           <div className="relative rounded-xl overflow-hidden">
             <div className="absolute -inset-px rounded-xl bg-gradient-to-br from-primary/20 via-transparent to-ring/10" />
-            <div className="relative glass-panel rounded-xl p-0.5 h-full">
+            <div className="relative glass-panel rounded-xl p-0.5 h-full gradient-border">
               <TerminalBlock lines={terminalLines} />
             </div>
           </div>

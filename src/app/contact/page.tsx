@@ -27,31 +27,31 @@ export default function ContactPage() {
         description="Let's connect. Whether it's architecture consulting, collaboration, or just a technical conversation."
       />
       <SectionContainer className="pt-0">
-        <div className="grid md:grid-cols-2 gap-12">
-          <ScrollReveal>
-            <div className="space-y-6">
-              <div>
-                <h3 className="font-medium mb-1">Email</h3>
+        <div className="grid md:grid-cols-2 gap-14">
+          <ScrollReveal direction="left">
+            <div className="space-y-8">
+              <div className="bento-card rounded-xl p-6">
+                <h3 className="font-semibold mb-2 text-sm">Email</h3>
                 <a
                   href={`mailto:${siteConfig.email}`}
-                  className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-2.5 text-sm"
                 >
                   <Mail className="h-4 w-4" />
                   {siteConfig.email}
                 </a>
               </div>
 
-              <div>
-                <h3 className="font-medium mb-1">Location</h3>
-                <p className="text-muted-foreground flex items-center gap-2">
+              <div className="bento-card rounded-xl p-6">
+                <h3 className="font-semibold mb-2 text-sm">Location</h3>
+                <p className="text-muted-foreground flex items-center gap-2.5 text-sm">
                   <MapPin className="h-4 w-4" />
                   {siteConfig.location}
                 </p>
               </div>
 
-              <div>
-                <h3 className="font-medium mb-3">Social</h3>
-                <div className="flex flex-col gap-2">
+              <div className="bento-card rounded-xl p-6">
+                <h3 className="font-semibold mb-3 text-sm">Social</h3>
+                <div className="flex flex-col gap-3">
                   {socialLinks.map((link) => {
                     const Icon = iconMap[link.icon];
                     return (
@@ -60,7 +60,7 @@ export default function ContactPage() {
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 text-sm"
+                        className="text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-2.5 text-sm"
                       >
                         {Icon && <Icon className="h-4 w-4" />}
                         {link.platform}
@@ -72,8 +72,10 @@ export default function ContactPage() {
             </div>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.1}>
-            <ContactForm />
+          <ScrollReveal delay={0.1} direction="right">
+            <div className="bento-card rounded-xl p-7">
+              <ContactForm />
+            </div>
           </ScrollReveal>
         </div>
       </SectionContainer>

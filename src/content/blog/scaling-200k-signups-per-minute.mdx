@@ -22,16 +22,17 @@ Conference registration looks simple: collect name, email, phone → verify OTP 
 
 ## Architecture Overview
 
-```
-CloudFront → API Gateway → Lambda (Registration)
-                              ├── Redis (OTP + Dedup)
-                              ├── SQS (Ticket Queue)
-                              │     └── Lambda (Ticket Gen)
-                              │           └── S3 (QR Storage)
-                              ├── SQS (Email Queue)
-                              │     └── Lambda (Email Send)
-                              │           └── SES
-                              └── DynamoDB (Registration DB)
+```mermaid
+flowchart TD
+  CF["CloudFront"] --> AG["API Gateway"] --> LR["Lambda\n(Registration)"]
+  LR --> Redis["Redis\n(OTP + Dedup)"]
+  LR --> SQS1["SQS\n(Ticket Queue)"]
+  LR --> SQS2["SQS\n(Email Queue)"]
+  LR --> DDB[("DynamoDB\n(Registration DB)")]
+  SQS1 --> LT["Lambda\n(Ticket Gen)"]
+  LT --> S3["S3\n(QR Storage)"]
+  SQS2 --> LE["Lambda\n(Email Send)"]
+  LE --> SES["SES"]
 ```
 
 Every component was chosen for horizontal scalability with zero coordination overhead.

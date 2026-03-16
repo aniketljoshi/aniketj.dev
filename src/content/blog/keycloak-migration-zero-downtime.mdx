@@ -22,11 +22,13 @@ Keycloak v16 (WildFly-based) had reached end-of-life. Three factors forced our h
 
 We couldn't do a big-bang cutover. Twelve client applications depended on Keycloak for authentication — including production APIs processing financial transactions. The strategy:
 
-```
-Phase 1: Deploy v22 (Green) alongside v16 (Blue)
-Phase 2: Sync data continuously (Blue → Green)
-Phase 3: Migrate clients one-by-one to Green
-Phase 4: Decommission Blue
+```mermaid
+flowchart TD
+  P1["Phase 1: Deploy v22 Green alongside v16 Blue"]
+  P2["Phase 2: Sync data continuously Blue to Green"]
+  P3["Phase 3: Migrate clients one-by-one to Green"]
+  P4["Phase 4: Decommission Blue"]
+  P1 --> P2 --> P3 --> P4
 ```
 
 ### Phase 1: Infrastructure as Code with Bicep

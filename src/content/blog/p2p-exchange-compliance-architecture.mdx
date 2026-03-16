@@ -27,28 +27,17 @@ Indian VDA regulations require:
 
 The compliance layer sits between the trading engine and the settlement layer — every trade must pass through compliance checks before funds move:
 
-```
-User Action
-    │
-    ▼
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│  API Gateway │────▶│  Trade Engine │────▶│  Compliance  │
-│  (Auth + RL) │     │  (Matching)   │     │   Gateway    │
-└─────────────┘     └──────────────┘     └──────┬──────┘
-                                                │
-                    ┌───────────────────────────┼───────────────────┐
-                    │                           │                   │
-                    ▼                           ▼                   ▼
-            ┌──────────────┐          ┌─────────────┐     ┌──────────────┐
-            │  KYC Service  │          │ KYT Service  │     │  TDS Service  │
-            │  (Identity)   │          │ (Transaction)│     │  (Tax)        │
-            └──────────────┘          └─────────────┘     └──────────────┘
-                    │                           │                   │
-                    ▼                           ▼                   ▼
-            ┌──────────────┐          ┌─────────────┐     ┌──────────────┐
-            │  DigiLocker   │          │  Chainalysis │     │  NSDL TDS    │
-            │  + Video KYC  │          │  + Elliptic  │     │  Portal      │
-            └──────────────┘          └─────────────┘     └──────────────┘
+```mermaid
+flowchart TD
+  UA["User Action"] --> AG["API Gateway\n(Auth + Rate Limit)"]
+  AG --> TE["Trade Engine\n(Matching)"]
+  TE --> CG["Compliance Gateway"]
+  CG --> KYC["KYC Service\n(Identity)"]
+  CG --> KYT["KYT Service\n(Transaction)"]
+  CG --> TDS["TDS Service\n(Tax)"]
+  KYC --> DL["DigiLocker\n+ Video KYC"]
+  KYT --> CA["Chainalysis\n+ Elliptic"]
+  TDS --> NSDL["NSDL TDS\nPortal"]
 ```
 
 ### The Compliance Gateway Pattern

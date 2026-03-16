@@ -3,9 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar, Clock, Tag } from "lucide-react";
 import { SectionContainer } from "@/components/shared/section-container";
+import { MermaidDiagram } from "@/components/shared/mermaid-diagram";
 import { getAllPosts, getPostBySlug } from "@/lib/mdx";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
+import { remarkMermaid } from "@/lib/remark-mermaid";
 import rehypePrettyCode from "rehype-pretty-code";
 import { MotionDiv } from "@/components/motion";
 
@@ -131,6 +133,7 @@ export default async function BlogPostPage({
 }
 
 const mdxComponents = {
+  Mermaid: MermaidDiagram,
   p: (props: any) => (
     <p className="leading-relaxed [&:not(:first-child)]:mt-6 text-foreground/90 font-medium text-[1.05rem]" {...props} />
   ),
@@ -170,7 +173,7 @@ async function MDXContent({ source }: { source: string }) {
     options: {
       parseFrontmatter: true,
       mdxOptions: {
-        remarkPlugins: [remarkGfm],
+        remarkPlugins: [remarkGfm, remarkMermaid],
         rehypePlugins: [[rehypePrettyCode, { theme: "github-dark-dimmed" }]],
       },
     },

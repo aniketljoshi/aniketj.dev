@@ -1,4 +1,8 @@
+"use client";
+
+import { m } from "motion/react";
 import { SectionContainer } from "./section-container";
+import { AuroraBackground } from "@/components/ui/aurora-background";
 
 interface PageHeaderProps {
   title: string;
@@ -8,30 +12,43 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, description, eyebrow }: PageHeaderProps) {
   return (
-    <SectionContainer className="py-20 pb-8 relative overflow-hidden">
-      <div className="absolute inset-0 -z-10">
-        <div
-          className="absolute top-0 left-0 w-[50%] h-[100%] rounded-full"
-          style={{
-            background: "radial-gradient(ellipse at top left, oklch(0.68 0.22 260 / 0.08) 0%, transparent 60%)",
-            filter: "blur(40px)",
-          }}
-        />
-      </div>
+    <SectionContainer className="py-24 pb-10 relative overflow-hidden">
+      <AuroraBackground className="opacity-40" />
       {eyebrow && (
-        <div className="flex items-center gap-3 mb-4">
-          <div className="h-px w-6 bg-primary" />
+        <m.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="flex items-center gap-3 mb-5"
+        >
+          <div className="h-px w-8 bg-gradient-to-r from-primary to-transparent" />
           <span className="section-label">{eyebrow}</span>
-        </div>
+        </m.div>
       )}
-      <h1 className="text-4xl font-bold tracking-tight sm:text-5xl leading-tight">
+      <m.h1
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1]"
+      >
         {title}
-      </h1>
+      </m.h1>
       {description && (
-        <p className="mt-4 text-lg text-muted-foreground max-w-2xl leading-relaxed">
+        <m.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25, ease: "easeOut" }}
+          className="mt-5 text-lg text-muted-foreground max-w-2xl leading-relaxed"
+        >
           {description}
-        </p>
+        </m.p>
       )}
+      <m.div
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="mt-10 h-px bg-gradient-to-r from-primary/50 via-border to-transparent origin-left"
+      />
     </SectionContainer>
   );
 }

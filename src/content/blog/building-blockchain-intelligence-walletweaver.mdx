@@ -24,20 +24,21 @@ But it doesn't tell you: *Who* sent it? *Why?* Is this a payment, a consolidatio
 
 ## Clean Architecture Layers
 
-```
-┌──────────────────────────────────────────────────┐
-│                  Presentation                      │
-│          GraphQL API  •  REST API  •  WebSocket     │
-├──────────────────────────────────────────────────┤
-│                  Application                       │
-│      Use Cases  •  DTOs  •  Event Handlers          │
-├──────────────────────────────────────────────────┤
-│                    Domain                           │
-│    Entities  •  Value Objects  •  Domain Services    │
-├──────────────────────────────────────────────────┤
-│                Infrastructure                      │
-│  Blockchain Nodes  •  Kafka  •  PostgreSQL  •  Redis │
-└──────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+  subgraph Presentation
+    A["GraphQL API"] ~~~ B["REST API"] ~~~ C["WebSocket"]
+  end
+  subgraph Application
+    D["Use Cases"] ~~~ E["DTOs"] ~~~ F["Event Handlers"]
+  end
+  subgraph Domain
+    G["Entities"] ~~~ H["Value Objects"] ~~~ I["Domain Services"]
+  end
+  subgraph Infrastructure
+    J["Blockchain Nodes"] ~~~ K["Kafka"] ~~~ L["PostgreSQL"] ~~~ M["Redis"]
+  end
+  Presentation --> Application --> Domain --> Infrastructure
 ```
 
 The **Dependency Rule** is enforced strictly: dependencies point inward. The Domain layer has zero external dependencies — no framework imports, no database annotations, no serialization concerns.
@@ -67,15 +68,19 @@ The domain model captures blockchain-agnostic concepts:
 
 Each use case is a single class with a single `execute` method:
 
-```
-AnalyzeWalletUseCase
-├── Input:  WalletAddress, AnalysisDepth (1-10 hops)
-├── Steps:  1. Resolve address → Wallet (clustering)
-│           2. Fetch transaction history (blockchain indexer)
-│           3. Trace fund flows (graph traversal)
-│           4. Score risk (rule engine + ML model)
-│           5. Generate attribution (entity matching)
-├── Output: WalletAnalysis (risk score, attribution, fund flow graph)
+```mermaid
+flowchart LR
+  subgraph AnalyzeWalletUseCase
+    direction TB
+    Input["Input: WalletAddress\nAnalysisDepth 1-10 hops"]
+    S1["1. Resolve address → Wallet\n(clustering)"]
+    S2["2. Fetch transaction history\n(blockchain indexer)"]
+    S3["3. Trace fund flows\n(graph traversal)"]
+    S4["4. Score risk\n(rule engine + ML model)"]
+    S5["5. Generate attribution\n(entity matching)"]
+    Output["Output: WalletAnalysis\n(risk score, attribution, fund flow graph)"]
+    Input --> S1 --> S2 --> S3 --> S4 --> S5 --> Output
+  end
 ```
 
 Use cases depend on **ports** (interfaces), not implementations. The `BlockchainPort`, `WalletRepositoryPort`, and `RiskScoringPort` are defined in the application layer and implemented in infrastructure.
@@ -86,10 +91,11 @@ Use cases depend on **ports** (interfaces), not implementations. The `Blockchain
 
 WalletWeaver indexes multiple blockchains in real-time. Each chain has a dedicated **Block Listener** that connects to a full node and streams new blocks:
 
-```
-Bitcoin Node ──▶ BTC Block Listener ──▶ Kafka: raw-blocks-btc
-Ethereum Node ──▶ ETH Block Listener ──▶ Kafka: raw-blocks-eth
-Polygon Node  ──▶ MATIC Block Listener ──▶ Kafka: raw-blocks-matic
+```mermaid
+flowchart LR
+  BTC["Bitcoin Node"] --> BL1["BTC Block Listener"] --> K1["Kafka: raw-blocks-btc"]
+  ETH["Ethereum Node"] --> BL2["ETH Block Listener"] --> K2["Kafka: raw-blocks-eth"]
+  MATIC["Polygon Node"] --> BL3["MATIC Block Listener"] --> K3["Kafka: raw-blocks-matic"]
 ```
 
 **Why Kafka?** Three reasons:
@@ -102,17 +108,15 @@ Polygon Node  ──▶ MATIC Block Listener ──▶ Kafka: raw-blocks-matic
 
 ### Processing Pipeline
 
-```
-raw-blocks ──▶ Block Parser ──▶ parsed-transactions
-                                      │
-                    ┌─────────────────┼─────────────────┐
-                    ▼                 ▼                  ▼
-            Transaction          Address             Risk
-            Indexer              Clusterer            Scorer
-                │                    │                  │
-                ▼                    ▼                  ▼
-            PostgreSQL           PostgreSQL          PostgreSQL
-            (transactions)       (clusters)          (risk_scores)
+```mermaid
+flowchart TD
+  RB["raw-blocks"] --> BP["Block Parser"] --> PT["parsed-transactions"]
+  PT --> TI["Transaction Indexer"]
+  PT --> AC["Address Clusterer"]
+  PT --> RS["Risk Scorer"]
+  TI --> DB1[("PostgreSQL\ntransactions")]
+  AC --> DB2[("PostgreSQL\nclusters")]
+  RS --> DB3[("PostgreSQL\nrisk_scores")]
 ```
 
 Each consumer is independently scalable. During peak (Bitcoin halving day), we scaled the Transaction Indexer to 12 partitions / 12 consumers to handle the 4x transaction volume spike.

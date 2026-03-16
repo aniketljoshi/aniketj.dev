@@ -13,7 +13,7 @@ export function SectionContainer({
   id,
 }: SectionContainerProps) {
   return (
-    <section id={id} className={cn("mx-auto max-w-6xl px-6 py-24", className)}>
+    <section id={id} className={cn("mx-auto max-w-7xl px-6 py-28", className)}>
       {children}
     </section>
   );

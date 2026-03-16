@@ -21,16 +21,28 @@ RAG separates **knowledge** (vectorized documents) from **reasoning** (the LLM).
 
 ## Architecture
 
-```
-Document Sources → Ingestion Pipeline → Vector Store → Retrieval → Generation
-                                                                      │
-SharePoint ────┐                                                      │
-Confluence ────┼── Delta Live Tables ── Chunking ── Embedding ── Azure AI Search
-SAP DMS ───────┤       (Bronze → Silver → Gold)                      │
-Engineering DB ┘                                                      │
-                                                         Azure OpenAI (GPT-4o)
-                                                              │
-                                                         Response + Citations
+```mermaid
+flowchart LR
+  subgraph Sources["Document Sources"]
+    SP["SharePoint"]
+    CF["Confluence"]
+    SAP["SAP DMS"]
+    EDB["Engineering DB"]
+  end
+  subgraph Ingestion["Ingestion Pipeline"]
+    DLT["Delta Live Tables\n(Bronze to Silver to Gold)"]
+    CH["Chunking"]
+    EMB["Embedding"]
+  end
+  subgraph Retrieval
+    AIS["Azure AI Search"]
+  end
+  subgraph Generation
+    GPT["Azure OpenAI\n(GPT-4o)"]
+    RES["Response + Citations"]
+  end
+  Sources --> DLT --> CH --> EMB --> AIS
+  AIS --> GPT --> RES
 ```
 
 ### Data Ingestion: Delta Live Tables

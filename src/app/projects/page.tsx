@@ -28,8 +28,8 @@ export default function ProjectsPage() {
           {projects.map((project, i) => (
             <ScrollReveal key={project.slug} delay={i * 0.05}>
               <Link href={`/projects/${project.slug}`}>
-                <div className="group rounded-lg border bg-card p-6 transition-all hover:border-primary/30 hover:glow">
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div className="group bento-card rounded-xl p-7 transition-all">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-5">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-1">
                         {project.image && (
@@ -41,7 +41,7 @@ export default function ProjectsPage() {
                             className="rounded-md shrink-0"
                           />
                         )}
-                        <h2 className="text-lg font-semibold group-hover:text-primary transition-colors">
+                        <h2 className="text-lg font-bold group-hover:text-primary transition-colors duration-300">
                           {project.title}
                         </h2>
                         <Badge variant="secondary" className="text-xs">
@@ -58,7 +58,7 @@ export default function ProjectsPage() {
                         {project.stack.slice(0, 8).map((tech) => (
                           <span
                             key={tech}
-                            className="inline-flex items-center gap-1.5 text-xs px-2 py-0.5 rounded-md bg-muted text-muted-foreground"
+                            className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg bg-muted/60 text-muted-foreground border border-border/30"
                           >
                             <TechIcon name={tech} />
                             {tech}
@@ -71,7 +71,7 @@ export default function ProjectsPage() {
                         )}
                       </div>
                     </div>
-                    <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0 mt-1" />
+                    <ArrowRight className="h-5 w-5 text-muted-foreground/30 group-hover:text-primary transition-colors duration-300 shrink-0 mt-1" />
                   </div>
                 </div>
               </Link>

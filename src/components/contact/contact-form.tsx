@@ -48,14 +48,19 @@ export function ContactForm() {
 
   if (sent) {
     return (
-      <div className="rounded-lg border bg-card p-8 text-center">
-        <p className="text-lg font-medium">Message sent</p>
+      <div className="rounded-xl border border-primary/20 bg-primary/5 p-8 text-center">
+        <div className="flex justify-center mb-4">
+          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+            <Send className="h-5 w-5 text-primary" />
+          </div>
+        </div>
+        <p className="text-lg font-bold">Message sent</p>
         <p className="text-sm text-muted-foreground mt-2">
           Thanks for reaching out. I&apos;ll get back to you soon.
         </p>
         <Button
           variant="outline"
-          className="mt-4"
+          className="mt-6 rounded-full"
           onClick={() => setSent(false)}
         >
           Send another

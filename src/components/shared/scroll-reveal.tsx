@@ -1,6 +1,6 @@
 "use client";
 
-import { MotionDiv } from "@/components/motion";
+import { m } from "motion/react";
 import type { ReactNode } from "react";
 
 interface ScrollRevealProps {
@@ -15,14 +15,14 @@ export function ScrollReveal({
   delay = 0,
 }: ScrollRevealProps) {
   return (
-    <MotionDiv
+    <m.div
       className={className}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.5, delay, ease: "easeOut" }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}
-    </MotionDiv>
+    </m.div>
   );
 }

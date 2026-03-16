@@ -1,129 +1,184 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { MotionDiv, MotionSpan } from "@/components/motion";
-import { ArrowRight, Mail } from "lucide-react";
+import { m } from "motion/react";
+import { ArrowRight, Mail, MoveDownLeft } from "lucide-react";
 import { ArchitectureVisual } from "./architecture-visual";
+
+const stats = [
+  { value: "12+", label: "Years building" },
+  { value: "6x", label: "Azure certified" },
+  { value: "9", label: "Products shipped" },
+];
 
 export function Hero() {
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden grid-dot-bg">
-      {/* Animated glowing orbs in the background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-primary/20 blur-[120px] mix-blend-screen animate-float opacity-50 dark:opacity-30" />
-        <div className="absolute top-[20%] -right-[15%] w-[40%] h-[60%] rounded-full bg-ring/20 blur-[130px] mix-blend-screen animate-float opacity-40 dark:opacity-20" style={{ animationDelay: '2s' }} />
-        <div className="absolute -bottom-[20%] left-[20%] w-[60%] h-[40%] rounded-full bg-primary/10 blur-[100px] mix-blend-screen animate-float opacity-50 dark:opacity-30" style={{ animationDelay: '4s' }} />
+    <section className="relative min-h-screen flex flex-col overflow-hidden">
+      {/* Mesh gradient background */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 dot-bg opacity-60" />
+        <div
+          className="absolute top-[-30%] left-[-10%] w-[60%] h-[60%] rounded-full"
+          style={{
+            background: "radial-gradient(ellipse, oklch(0.68 0.22 260 / 0.18) 0%, transparent 70%)",
+            filter: "blur(60px)",
+            animation: "float 12s ease-in-out infinite",
+          }}
+        />
+        <div
+          className="absolute top-[10%] right-[-15%] w-[50%] h-[50%] rounded-full"
+          style={{
+            background: "radial-gradient(ellipse, oklch(0.7 0.18 220 / 0.12) 0%, transparent 70%)",
+            filter: "blur(80px)",
+            animation: "float-delayed 15s ease-in-out infinite",
+          }}
+        />
+        <div
+          className="absolute bottom-[-10%] left-[20%] w-[60%] h-[40%] rounded-full"
+          style={{
+            background: "radial-gradient(ellipse, oklch(0.65 0.2 280 / 0.1) 0%, transparent 70%)",
+            filter: "blur(70px)",
+          }}
+        />
       </div>
 
-      <div className="relative mx-auto max-w-6xl px-6 py-24 z-10 w-full">
-        <div className="grid lg:grid-cols-[1fr,auto] gap-12 items-center">
-          <div>
-            <MotionDiv
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
-              <p className="font-mono text-sm tracking-wider text-primary uppercase font-bold mb-4 drop-shadow-sm">
-                Software Architect
-              </p>
-            </MotionDiv>
+      {/* Main content */}
+      <div className="flex-1 mx-auto max-w-6xl px-6 w-full flex items-center pt-28 pb-16">
+        <div className="grid lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_440px] gap-16 items-center w-full">
 
-            <MotionDiv
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
+          {/* Left - text */}
+          <div className="space-y-8">
+            {/* Eyebrow */}
+            <m.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="flex items-center gap-3"
+            >
+              <div className="h-px w-8 bg-primary" />
+              <span className="section-label">Software Architect</span>
+            </m.div>
+
+            {/* Name */}
+            <m.h1
+              initial={{ opacity: 0, y: 32 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="display-text text-[clamp(3.5rem,9vw,7rem)] leading-[0.95] tracking-[-0.05em]"
             >
-              <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold tracking-tighter leading-[1.05] bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/70">
-                Aniket Joshi
-              </h1>
-            </MotionDiv>
+              <span className="block">Aniket</span>
+              <span className="block text-gradient">Joshi</span>
+            </m.h1>
 
-            <MotionDiv
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-              className="mt-6 max-w-2xl"
-            >
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                I design and build{" "}
-                <MotionSpan
-                  className="text-foreground font-medium"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  distributed systems
-                </MotionSpan>
-                ,{" "}
-                <MotionSpan
-                  className="text-foreground font-medium"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  cloud platforms
-                </MotionSpan>
-                ,{" "}
-                <MotionSpan
-                  className="text-foreground font-medium"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.7 }}
-                >
-                  AI pipelines
-                </MotionSpan>
-                , and{" "}
-                <MotionSpan
-                  className="text-foreground font-medium"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.8 }}
-                >
-                  Web3 applications
-                </MotionSpan>
-                . 12+ years architecting production systems across healthcare,
-                logistics, banking, and blockchain.
-              </p>
-            </MotionDiv>
-
-            <MotionDiv
+            {/* Description */}
+            <m.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
-              className="mt-10 flex flex-wrap gap-4"
+              transition={{ duration: 0.6, delay: 0.25, ease: "easeOut" }}
+              className="text-lg text-muted-foreground leading-relaxed max-w-xl"
             >
-              <Button size="lg" className="rounded-full shadow-lg hover:shadow-primary/25 transition-all glow-hover" render={<Link href="/work" />}>
-                View Work <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="lg" className="rounded-full backdrop-blur-md glass-panel hover:bg-muted/50 transition-all border-border/50" render={<Link href="/contact" />}>
-                <Mail className="mr-2 h-4 w-4" /> Get in Touch
-              </Button>
-            </MotionDiv>
+              I design and build{" "}
+              <span className="text-foreground font-medium">distributed systems</span>,{" "}
+              <span className="text-foreground font-medium">cloud platforms</span>,{" "}
+              <span className="text-foreground font-medium">AI pipelines</span>, and{" "}
+              <span className="text-foreground font-medium">Web3 applications</span>.{" "}
+              12+ years architecting production systems across healthcare, logistics, banking, and blockchain.
+            </m.p>
 
-            <MotionDiv
+            {/* CTAs */}
+            <m.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
+              className="flex flex-wrap gap-3"
+            >
+              <Link
+                href="/work"
+                className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-primary/40 hover:scale-[1.02] hover:-translate-y-0.5"
+              >
+                View my Work
+                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+              </Link>
+              <Link
+                href="/contact"
+                className="group inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/50 backdrop-blur-md px-6 py-3 text-sm font-semibold transition-all duration-300 hover:border-primary/50 hover:bg-card hover:scale-[1.02] hover:-translate-y-0.5"
+              >
+                <Mail className="h-4 w-4" />
+                Get in Touch
+              </Link>
+            </m.div>
+
+            {/* Stats */}
+            <m.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-              className="mt-16 flex flex-wrap gap-x-8 gap-y-3 text-sm text-muted-foreground font-mono"
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="flex flex-wrap gap-8 pt-2"
             >
-              <span>6x Azure Certified</span>
-              <span className="text-border">|</span>
-              <span>12+ Years</span>
-              <span className="text-border">|</span>
-              <span>Architect @ Vanderlande</span>
-            </MotionDiv>
+              {stats.map((stat, i) => (
+                <m.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.6 + i * 0.1 }}
+                  className="flex flex-col"
+                >
+                  <span className="text-2xl font-bold tracking-tight text-gradient">{stat.value}</span>
+                  <span className="text-xs text-muted-foreground font-mono mt-0.5">{stat.label}</span>
+                </m.div>
+              ))}
+              <m.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.9 }}
+                className="flex flex-col"
+              >
+                <span className="text-2xl font-bold tracking-tight text-gradient">Arch.</span>
+                <span className="text-xs text-muted-foreground font-mono mt-0.5">@ Vanderlande</span>
+              </m.div>
+            </m.div>
           </div>
 
-          {/* Architecture visualization — hidden on mobile */}
-          <div className="hidden lg:block">
-            <ArchitectureVisual />
-          </div>
+          {/* Right - architecture diagram */}
+          <m.div
+            initial={{ opacity: 0, scale: 0.9, x: 20 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="hidden lg:block"
+          >
+            <div className="relative">
+              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-primary/10 via-transparent to-ring/10 blur-2xl" />
+              <div className="relative rounded-2xl border border-border/50 bg-card/30 backdrop-blur-xl p-6 shadow-2xl glass-panel">
+                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border/50">
+                  <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-400/70" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/70" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-400/70" />
+                  </div>
+                  <span className="text-[10px] font-mono text-muted-foreground ml-1">system.architecture</span>
+                </div>
+                <ArchitectureVisual />
+              </div>
+            </div>
+          </m.div>
         </div>
       </div>
 
-      {/* Gradient fade at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      {/* Scroll indicator */}
+      <m.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 0.5 }}
+        className="flex justify-center pb-10"
+      >
+        <div className="flex flex-col items-center gap-1 text-muted-foreground/50">
+          <MoveDownLeft className="h-3.5 w-3.5 animate-bounce" />
+          <span className="text-[10px] font-mono tracking-widest uppercase">scroll</span>
+        </div>
+      </m.div>
+
+      {/* Bottom gradient fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent pointer-events-none" />
     </section>
   );
 }

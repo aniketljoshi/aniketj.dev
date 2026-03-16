@@ -5,7 +5,6 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionContainer } from "@/components/shared/section-container";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import { TechIcon } from "@/components/shared/tech-icon";
 import { skills } from "@/data/skills";
 
@@ -19,46 +18,43 @@ export function TechStack() {
     <SectionContainer>
       <SectionHeading
         title="Tech Stack"
+        eyebrow="Tools"
         description="Technologies and tools I work with regularly"
       />
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {visible.map((category, i) => (
-          <ScrollReveal key={category.category} delay={i * 0.05}>
-            <div className="glass-panel p-5 rounded-xl border border-border/50 hover:border-primary/30 transition-all duration-300 h-full">
-              <h3 className="font-mono text-xs text-primary uppercase tracking-wider mb-4 font-semibold">
-                {category.category}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {category.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md border border-border/50 bg-background/40 backdrop-blur-md text-muted-foreground hover:text-primary hover:border-primary/50 hover:shadow-[0_0_15px_-3px_rgba(var(--primary),0.3)] transition-all duration-300"
-                  >
-                    <TechIcon name={skill} />
-                    {skill}
-                  </span>
-                ))}
-              </div>
+
+      <div className="space-y-4">
+        {visible.map((category) => (
+          <div key={category.category} className="bento-card rounded-xl p-5">
+            <p className="font-mono text-[10px] text-primary uppercase tracking-widest mb-4 font-semibold">
+              {category.category}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {category.skills.map((skill) => (
+                <span
+                  key={skill}
+                  className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg border border-border/50 bg-background/40 backdrop-blur-sm text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all duration-200 cursor-default"
+                >
+                  <TechIcon name={skill} />
+                  {skill}
+                </span>
+              ))}
             </div>
-          </ScrollReveal>
+          </div>
         ))}
       </div>
+
       {skills.length > INITIAL_COUNT && (
         <div className="mt-6 text-center">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setExpanded(!expanded)}
+            className="text-muted-foreground hover:text-foreground gap-1.5"
           >
             {expanded ? (
-              <>
-                Show less <ChevronUp className="ml-1 h-4 w-4" />
-              </>
+              <>Show less <ChevronUp className="h-3.5 w-3.5" /></>
             ) : (
-              <>
-                Show all {skills.length} categories{" "}
-                <ChevronDown className="ml-1 h-4 w-4" />
-              </>
+              <>Show all {skills.length} categories <ChevronDown className="h-3.5 w-3.5" /></>
             )}
           </Button>
         </div>

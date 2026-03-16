@@ -16,6 +16,7 @@ export function FeaturedWork() {
     <SectionContainer>
       <SectionHeading
         title="Featured Work"
+        eyebrow="Portfolio"
         description="Selected projects with architecture deep-dives"
       />
       <div className="grid gap-6">
@@ -26,7 +27,7 @@ export function FeaturedWork() {
           return (
             <ScrollReveal key={project.slug} delay={i * 0.1}>
               <Link href="/work">
-                <div className="group relative rounded-xl border border-border/50 bg-card/30 backdrop-blur-md p-8 transition-all duration-500 hover:-translate-y-2 hover:border-primary/50 hover:bg-card/50 hover:shadow-[0_0_30px_-5px_rgba(var(--primary),0.3)] overflow-hidden">
+                <div className="group bento-card relative rounded-xl p-6 sm:p-8 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <div className="relative z-10 flex flex-col sm:flex-row sm:items-start justify-between gap-6">
                     <div className="flex-1">
